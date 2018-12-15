@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapper nameSpace="com.zzq.mybatis.UserMapper">
+    <select id="findById" resultType="com.zzq.mybatis.UserDome">
+        SELECT * FROM member WHERE id = ?
+    </select>
+</mapper>

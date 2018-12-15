@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database>
+    <properties name="driverClassName">com.mysql.jdbc.Driver</properties>
+    <properties name="url">jdbc:mysql://192.168.3.250:3306/member?characterEncoding=utf8</properties>
+    <properties name="username">root</properties>
+    <properties name="password">root</properties>
+</database>
