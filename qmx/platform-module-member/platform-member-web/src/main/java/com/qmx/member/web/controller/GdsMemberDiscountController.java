@@ -1,0 +1,128 @@
+package com.qmx.member.web.controller;
+
+import com.qmx.appextend.controller.BaseController;
+import com.qmx.base.api.base.RestResult;
+import com.qmx.base.api.dto.PageDto;
+import com.qmx.base.api.dto.RestResponse;
+import com.qmx.base.api.exception.BusinessException;
+import com.qmx.member.enumerate.ProductType;
+import com.qmx.member.model.GdsMemberAssociated;
+import com.qmx.member.model.GdsMemberDiscount;
+import com.qmx.member.model.GdsMemberLevel;
+import com.qmx.member.query.GdsMemberDiscountVO;
+import com.qmx.member.remoteapi.ProductService;
+import com.qmx.member.remoteapi.ReleaseService;
+import com.qmx.member.service.GdsMemberDiscountService;
+import com.qmx.member.service.GdsMemberLevelService;
+import com.qmx.shop.model.commodity.Release;
+import com.qmx.shop.model.ticket.Product;
+import com.qmx.shop.query.commodity.ReleaseVO;
+import com.qmx.shop.query.ticket.ProductVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.List;
+
+/**
+ * 会员优惠管理
+ */
+@Controller
+@RequestMapping("/discount")
+public class GdsMemberDiscountController extends BaseController {
+    @Autowired
+    private GdsMemberDiscountService discountService;
+    @Autowired
+    private GdsMemberLevelService memberLevelService;
+    @Autowired
+    private ProductService shopProductService;
+    @Autowired
+    private ReleaseService releaseService;
+
+    @RequestMapping(value = "/list")
+    public String list(GdsMemberDiscountVO dto, ModelMap model) {
+        PageDto<GdsMemberDiscount> Discount = discountService.findList(getCurrentUser(), dto);
+        RestResponse<List<GdsMemberLevel>> LevelDtos = memberLevelService.findLevelAll(getCurrentUser());
+        model.addAttribute("levelAll", LevelDtos.getData());
+        model.addAttribute("dto", dto);
+        model.addAttribute("page", Discount);
+        return "/member/Discount/list";
+    }
+
+    @RequestMapping(value = "/add")
+    public String add(ModelMap model) {
+        RestResponse<List<GdsMemberLevel>> restResponse = memberLevelService.findLevelAll(getCurrentUser());
+        if (!restResponse.success()) {
+            throw new BusinessException(restResponse.getErrorMsg());
+        }
+        model.addAttribute("listL", restResponse.getData());
+        return "/member/Discount/add";
+    }
+
+    //添加可以优惠门票
+    @RequestMapping(value = "productlist")
+    public String productlist(ProductVO productVO, ModelMap model) {
+        model.addAttribute("dto", productVO);
+        RestResult<PageDto<Product>> data = shopProductService.queryList(productVO, getCurrentMember().getId());
+        model.addAttribute("page", data.getData());
+        return "/member/Discount/productlist";
+    }
+
+    //添加可以优惠商品
+    @RequestMapping(value = "/releaselist", method = RequestMethod.GET)
+    public String releaselist(ReleaseVO shopReleaseVO, ModelMap modelMap) {
+        modelMap.addAttribute("dto", shopReleaseVO);
+        RestResult<PageDto<Release>> page = releaseService.findPage(shopReleaseVO, getCurrentMember().getId());
+        modelMap.addAttribute("page", page.getData());
+        return "/member/Discount/releaselist";
+    }
+
+    @RequestMapping(value = "/save")
+    public String save(GdsMemberDiscountVO dto, HttpServletRequest request) {
+        RestResponse<GdsMemberDiscount> restResponse = discountService.createDto(getCurrentUser(), dto);
+        if (!restResponse.success()) {
+            throw new BusinessException(restResponse.getErrorMsg());
+        }
+        return "redirect:list";
+    }
+
+    @RequestMapping(value = "/edit")
+    public String edit(Long id, ModelMap model) {
+        RestResponse<GdsMemberDiscount> restResponse = discountService.findById(id);
+        RestResponse<List<GdsMemberLevel>> listL = memberLevelService.findLevelAll(getCurrentUser());
+        if (!restResponse.success()) {
+            throw new BusinessException(restResponse.getErrorMsg());
+        }
+        GdsMemberDiscount dto = restResponse.getData();
+        HashMap<ProductType, List<GdsMemberAssociated>> map = dto.getMap();
+        List<GdsMemberAssociated> menpiao = map.get(ProductType.menpiao);
+        List<GdsMemberAssociated> shangpin = map.get(ProductType.shangpin);
+        model.addAttribute("menpiao", menpiao);
+        model.addAttribute("shangpin", shangpin);
+        model.addAttribute("dto", dto);
+        model.addAttribute("listL", listL.getData());
+        return "/member/Discount/edit";
+    }
+
+    @RequestMapping(value = "/update")
+    public String update(GdsMemberDiscountVO dto) {
+        RestResponse<GdsMemberDiscount> restResponse = discountService.updateDto(getCurrentUser(), dto);
+        if (!restResponse.success()) {
+            throw new BusinessException(restResponse.getErrorMsg());
+        }
+        return "redirect:list";
+    }
+
+    @RequestMapping(value = "/delete")
+    public String delete(Long id) {
+        RestResponse restResponse = discountService.deleteDto(getCurrentUser(), id);
+        if (!restResponse.success()) {
+            throw new BusinessException(restResponse.getErrorMsg());
+        }
+        return "redirect:list";
+    }
+}

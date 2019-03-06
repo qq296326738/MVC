@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberMoneyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberMoney">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="member_id" property="memberId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+        <result column="sn" property="sn"/>
+        <result column="time" property="time"/>
+        <result column="money" property="money"/>
+        <result column="actual_money" property="actualMoney"/>
+        <result column="recharge_type" property="rechargeType"/>
+        <result column="balance_money" property="balanceMoney"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="integral" property="integral"/>
+        <result column="donation_money" property="donationMoney"/>
+        <result column="record_type" property="recordType"/>
+        <result column="status" property="status"/>
+        <result column="sn_text" property="snText"/>
+        <result column="syn_state" property="synState"/>
+        <result column="fz_id" property="fzId"/>
+    </resultMap>
+
+    <sql id="Base_Condition">
+        <where>
+            member_id = #{cm.memberId}
+            <if test="cm.sn != null and cm.sn != ''">
+                and sn = #{cm.sn}
+            </if>
+            <if test="cm.recordType != null">
+                and record_type = #{cm.recordType}
+            </if>
+            <if test="cm.time != null">
+                and DATE_FORMAT(time,'%Y%m%d') = DATE_FORMAT(#{cm.time},'%Y%m%d')
+            </if>
+            <if test="cm.synState != null">
+                and syn_state = #{cm.synState}
+            </if>
+            and enable_ = 1
+            AND status = 1
+        </where>
+    </sql>
+
+    <select id="selectListEX" resultMap="BaseResultMap">
+        select * from gds_member_money
+        <include refid="Base_Condition"/>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="listrecordType" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_money
+        WHERE member_id = #{id} AND  record_type = #{recordType} AND status = 1 AND syn_state = 1
+        ORDER BY time DESC
+    </select>
+
+    <select id="getGeneralRecord" resultType="hashmap">
+        SELECT
+            SUM(( CASE WHEN record_type = 1 THEN actual_money/*(money + donation_money)*/ END )) recharge,
+            SUM(( CASE WHEN record_type = 0 THEN actual_money END)) consumption
+        FROM
+            gds_member_money
+        WHERE
+            member_id = #{id}
+            AND status = 1
+            AND syn_state = 1
+    </select>
+
+    <select id="queryMoneyIsUpdated" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_money
+        WHERE supplier_id = #{id}
+        AND  syn_state = 0
+        AND  enable_ = 1
+--         AND  record_type = 1
+        AND  status = 1
+        LIMIT 20
+    </select>
+
+    <update id="updaMemberMoneyOnLineSyn">
+        UPDATE gds_member_money SET syn_state = 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="delBymemberId">
+        UPDATE gds_member_money SET enable_ = 0 ,create_by = #{userId},create_time = #{date}
+        WHERE member_id = #{id}
+    </update>
+
+    <select id="findBySn" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_money
+        WHERE sn = #{sn}
+        AND member_id = #{id}
+        LIMIT 1
+    </select>
+</mapper>

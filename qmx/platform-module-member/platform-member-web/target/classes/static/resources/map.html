@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+<title> - </title>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=DE7c0d9d33dae2e92a25b591f005b7b8&s=1"></script>
+<script type="text/javascript" src="/resources/admin/js/jquery.js"></script>
+<script type="text/javascript" src="/resources/admin/js/openMap.js"></script> 
+<script type="text/javascript">
+$(function(){
+	var p = location.hash;
+	if(p != "") {
+		p = p.substring(1);
+		p = p.split(",");
+		oppenMap(p[0],p[1]);
+	}
+});
+</script>
+</head>
+<body class="input">
+	<div id="allmap" style="position: absolute; width: 620px; height: 320px"></div>
+</body>
+</html>

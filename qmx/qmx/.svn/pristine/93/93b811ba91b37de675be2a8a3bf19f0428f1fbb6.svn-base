@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.qmx</groupId>
+	<artifactId>platform-all-modules</artifactId>
+	<version>0.3.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>platform-all-modules</name>
+	<description>platform-all for Spring Boot</description>
+
+	<modules>
+		<module>platform-base-api</module>
+		<module>platform-base-core</module>
+		<module>platform-module-core</module>
+		<module>platform-module-ticket</module>
+		<module>platform-app-extend</module>
+		<module>platform-module-wxbasics</module>
+		<module>platform-module-hotel</module>
+		<module>platform-module-openapi</module>
+		<module>platform-module-marketing</module>
+		<module>platform-module-travelagency</module>
+		<module>platform-module-member</module>
+		<module>platform-module-shop</module>
+	</modules>
+</project>

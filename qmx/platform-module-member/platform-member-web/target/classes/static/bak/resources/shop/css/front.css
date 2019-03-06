@@ -1,0 +1,276 @@
+﻿
+/*index.html*/
+
+#flexslider01{ background: #fff;position: relative; -webkit-border-radius: 4px; -moz-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px;zoom: 1;margin: 0; padding: 0; width:100%; height:583px;}
+#flexslider02{ background: #fff;position: relative; -webkit-border-radius: 4px; -moz-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px;zoom: 1;margin: 0; padding: 0; width:594px; height:250px; margin:14px 14px 0 0;}
+#flexslider03{ background: #fff;position: relative; -webkit-border-radius: 4px; -moz-border-radius: 4px; -o-border-radius: 4px; border-radius: 4px;zoom: 1;margin: 0; padding: 0; width:289px; height:565px; margin:13px 13px 0 0;}
+.flex-viewport { height:100%;max-height: 2000px; -webkit-transition: all 1s ease; -moz-transition: all 1s ease; transition: all 1s ease;}
+.flexslider .slides {zoom: 1; width:100%; height:100%; overflow:hidden}
+.flexslider .slides > li { width:100%; height:100%;-webkit-backface-visibility: hidden;} /* Hide the slides before the JS is loaded. Avoids image jumping */
+.flexslider .slides>li>img{width:100%; height:100%;display: block;}
+
+#flexslider02 .flex-control-nav {width: 100%; position: absolute; bottom:10px; right:15px; text-align:right; font-size:0;}
+#flexslider02 .flex-control-nav li {margin: 0 7.5px; display: inline-block; zoom: 1; *display: inline;}
+#flexslider02 .flex-control-paging li a {width:11px; height:11px; display: block; background: #fff; cursor: pointer; text-indent: -9999px; -webkit-border-radius: 11px; -moz-border-radius: 11px; -o-border-radius: 11px; border-radius: 11px;}
+#flexslider02 .flex-control-paging li a:hover { background:#1db73b;}
+#flexslider02 .flex-control-paging li a.flex-active { background:#1db73b;}
+
+#flexslider03 .flex-control-nav {width: 100%; position: absolute; bottom:8px; right:5px; text-align:right; font-size:0;}
+#flexslider03 .flex-control-nav li {margin: 0 7.5px; display: inline-block; zoom: 1; *display: inline;}
+#flexslider03 .flex-control-paging li a {width:11px; height:11px; display: block; background: #fff; cursor: pointer; text-indent: -9999px; -webkit-border-radius: 11px; -moz-border-radius: 11px; -o-border-radius: 11px; border-radius: 11px;}
+#flexslider03 .flex-control-paging li a:hover { background:#ff7d29;}
+#flexslider03 .flex-control-paging li a.flex-active { background:#ff7d29;}
+
+
+.flex-direction-nav {*height: 0;}
+.flex-direction-nav a  { text-decoration:none; display: block; width:46px; height:86px; margin: -43px 0 0; position: absolute; top: 50%; z-index: 10; overflow: hidden; opacity: 0; cursor: pointer; color: rgba(0,0,0,0.8);  background:url(../images/next.png) no-repeat; text-indent:-999em }
+.flex-direction-nav .flex-prev { left: -50px; background-position:0 0 }
+.flex-direction-nav .flex-next { right: -50px; background-position:-46px 0;}
+.flexslider:hover .flex-prev { opacity: 0.7; left: 10px;}
+.flexslider:hover .flex-next { opacity: 0.7; right: 10px;}
+.flexslider:hover .flex-next:hover, .flexslider:hover .flex-prev:hover { opacity: 1; }
+.flex-direction-nav .flex-disabled { opacity: 0!important; filter:alpha(opacity=0); cursor: default; }
+
+.guanggao{ width:1220px; margin:30px 0 55px 0;}
+.guanggao>a{ float:left; display:block; width:284px; height:114px; overflow:hidden; margin-right:20px;}
+.guanggao>a>img{ height:100%;}
+
+.ListTit{ width:100%;}
+.ListTit>h1{ font-size:28px;font-weight:normal;}
+.ListT01>h1{ color:#dd127b;}
+.ListT02>h1{ color:#1db73b;}
+.ListT03>h1{ color:#ff7d29;}
+.ListT04>h1{ color:#5686f2;}
+.ListTit>h1>img{ vertical-align:middle; margin-right:13px;}
+.tit_tag{ margin-top:14px;}
+.tit_tag>a{ display:block; float:left;height:26px; line-height:26px;padding:0 8px; margin-left:5px;font-size:14px; color:#aaa;}
+.tit_tag>a.curr,.tit_tag>a:hover{ background:#acacac; border-radius:2px; color:#fff;}
+.ListTit>p{ width:100%; height:2px; background:#e9e9e9; margin-top:5px; position:relative;}
+.ListTit>p>i{ display:block;width:157px; height:2px; position:absolute; left:0;top:0;}
+.ListT01>p>i{ background:#dd127b;}
+.ListT02>p>i{ background:#1db73b;}
+.ListT03>p>i{ background:#ff7d29;}
+.ListT04>p>i{ background:#5686f2;}
+
+.ListBox{ width:1220px; margin-bottom:38px;}
+.hotItem{ display:block; float:left; width:386px; height:350px; margin:22px 20px 0 0; position:relative;}
+.hotItem>span{ display:block; width:386px; height:263px; overflow:hidden;}
+.hotItem>span>img{ height:100%;}
+.hotItem>div{ width:100%; height:67px; background:#fff; padding:10px 0; box-shadow:5px 5px 5px #ddd;}
+.hotItem>div>span{ width:85px;height:67px; text-align:center; line-height:67px; border-left:1px solid #e9e9e9; font-size:12px; color:#333;}
+.hotprice{ font-size:16px; color:#de187f;}
+.hotItem>div>p{ width:290px;height:50px; line-height:50px; text-align:left;overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:27px; padding-left:10px;font-size:16px; color:#343434;}
+.hotItem>p{ width:180px; height:50px; text-align:center; line-height:50px; position:absolute; left:0; top:238px; font-size:18px; color:#fff;}
+.hotItem>p.hotTag01{ background:#ff7d29;}
+.hotItem>p.hotTag02{ background:#5686f2;}
+.hotItem>p.hotTag03{ background:#1db73b;}
+
+
+.ticketItem{ display:block; width:289px; height:250px; overflow:hidden;float:left; margin:14px 14px 0 0; position:relative;}
+.ticketItem>img{ height:100%;}
+.ticketItem>p{ width:269px; height:33px; background:url(../images/name_bg.png) no-repeat; padding:50px 10px 0 10px; position:absolute; bottom:0; left:0; font-size:16px; color:#fff;}
+.ticketItem>p>.TName{ width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left;}
+.ticketItem>p>.TPrice{ display:inline-block; font-size:12px; margin-top:5px;}
+
+.bookingItem{ display:block; width:290px; height:275px; float:left; margin:13px 13px 0 0;}
+.bookingItem>span{ display:block;width:290px; height:191px; overflow:hidden;}
+.bookingItem>span>img{ height:100%;}
+.booking_tit{ width:260px; height:84px; background:#f6f6f6; padding:0 15px;}
+.booking_tit>span{ display:block; height:50px; line-height:50px; text-align:left; font-size:20px; color:#333;} 
+.Bprice{ font-size:14px; color:#333;}
+.BNum{ font-size:14px; color:#898989;}
+
+.tslu_warp{width: 1225px;}
+.tsbg_box{ display:block;width: 385px; height: 275px; position: relative; overflow: hidden; margin-right: 24px;}
+.tsbg_box>img{width: 100%;}
+.tsbg_box .jiashao{width: 100%; height: 107px; position: absolute; left: 0; bottom: 0;}
+.tsbg_box .jiage{float: left; display: inline-block; padding: 7px 19px; text-align: center; font: normal 14px "Microsoft YaHei"; color: #fff; background-color: #dc0b78;}
+.tsbg_box .jiage>label{font-size: 20px;}
+.jiashao .fong_nei{width: 365px;height: 48px; padding: 0 10px; margin-top: 10px; float: left; font: normal 18px/24px "Microsoft YaHei"; color: #fff; text-align:left; overflow:hidden;}
+.tsbg_box_som{width: 382px; height: 125px; overflow: hidden; margin:0 25px 25px 0;}
+.tsbg_box_som .img_cont{width: 125px; height: 100%; float: left; overflow: hidden;}
+.tsbg_box_som .img_cont>img{height: 100%;}
+.tsbg_box_som .rig_zi{width: 257px; height: 125px; float: left; background-color: #fff;}
+.dujia_nei{height: 60px; padding: 0 15px; margin-top: 20px; font: normal 18px/30px "Microsoft YaHei"; text-align:left;}
+.zuih_jia{display: inline-block; float: right; margin-right: 20px; font: normal 12px "Microsoft YaHei"; color: #dc0b78;cursor: pointer}
+.zuih_jia label{font-size: 24px;}
+.tsbg_box_som.du .rig_zi{height: 123px; border-top: 2px solid #d9016d;}
+.mt20{ margin:20px 0;}
+
+.banner{ width:100%; height:583px; position:relative;}
+.bannerbase{height:583px;position:absolute; left:50%; top:0; margin-left:-600px; z-index:99; }
+.seabox{position:absolute; left:0; top:20px;}
+.Indexsearch{ width:104px; height:366px; background:#333333; }
+.Indexsearch>li{ width:104px; height:46px; line-height:46px;cursor:pointer; border-top:1px solid #4f4f4f; border-bottom:1px solid #000; font-size:16px; color:#fff;}
+.Indexsearch>li.curr{ background:#fff; border-top:1px solid #fff; border-bottom:1px solid #fff; color:#dd127b;}
+.searchCont{ width:336px; height:366px; background:#fff; position:absolute; left:104px; top:0;}
+.searchBox{ width:296px; height:100%; padding:0 20px; overflow:hidden;}
+.qz_input{ margin-top:45px;}
+.qz_input>span{ display:block; height:31px; line-height:31px;font-size:14px; color:#333;}
+.qz_input>input{ width:226px; height:31px; line-height:31px; text-align:left; padding-left:10px; border:1px solid #ababab; border-radius:2px; font-size:12px; color:#999;}
+.searchBtn{ display:block; width:70px; height:30px; background:#dd127b; border-radius:2px; text-align:center; line-height:30px; font-size:14px; color:#fff; margin-top:18px;}
+.hotList{ text-align:left; margin-bottom:5px;}
+.hotList>span{ display:block;font-size:12px; color:#b9b9b9; margin-bottom:5px;}
+.hotList>a{ font-size:12px; color:#353535; display:inline-block; margin:0 10px 5px 0;}
+.hotList>a:hover{ color:#dd127b;}
+.Htit{ font-size:16px; color:#4e4e4e; padding-bottom:11px; margin-top:20px; border-bottom:1px solid #b9b9b9; text-align:left; position:relative;}
+.Htit>i{width:64px; height:2px; background:#d80770; position:absolute;left:0; bottom:-1px;}
+.hsearch_input{ margin-top:15px;position: relative}
+.hsearch_input>input{ width:217px;}
+.hsearch_input .taday{position: absolute;font: normal 14px/33px "Microsoft YaHei";color: #a4a4a4;right: 10px}
+
+/*套票页面样式开始*/
+.inner{width: 1200px; margin: 0 auto;}
+.t_bnaner{position: relative;height: 434px;width: 100%;border-bottom: 1px solid #e8edf7;}
+.sub_sou{position:absolute;bottom: 0;width: 293px;height: 434px;background: url("../images/bg_soubox.png") repeat;color: #fff}
+.sub_sou>.top{padding: 0 25px 31px 25px;border-bottom: 1px solid #2D2C2C;padding-top: 24px}
+.sub_sou>.bottom{padding: 0 25px;}
+.sub_sou .sou_btn{display: block; width: 71px; height: 31px; background-color: #dd127b; font: normal 14px/31px "Microsoft YaHei"; text-align: center; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; margin: 31px 4px 0 0; float: right;}
+.tsou_h2{height:42px;font: normal 16px "Microsoft YaHei";border-bottom: 1px solid #b9b9b9;}
+.tsou_h2>span{display: inline-block; height: 41px; line-height: 42px; border-bottom: 2px solid #d80770;}
+.input_sou{height: 34px; margin-top: 25px;}
+.input_sou>span{font: normal 14px/34px "Microsoft YaHei"; float: left;}
+.input_sou>input{width: 163px; height: 32px; padding-left: 10px; margin-right: 4px; font: normal 14px/32px "Microsoft YaHei"; color: #ababab; float: right; border: 1px solid #ababab; background-color: transparent; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px;}
+.sub_sou>.bottom .tsou_h2>span{border-color: #f8f7f7;}
+.cs_nav{margin-top: 25px;}
+.cs_nav a{height: 30px; display: block; padding: 0 7px; float: left; margin-right: 6px; border: 1px solid transparent; text-align: left; font: normal 14px/30px "Microsoft YaHei"; color: #fff; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px;}
+.cs_nav a:hover{border-color: #fff;}
+.xstm{height: 416px; background-color: #f3f3f3;}
+.xstm_warp{width: 1215px;}
+.bank_title{height: 102px;}
+.bank_title .big{font: normal 36px "Microsoft YaHei"; color: #3a3a3a; float: left; margin: 27px 10px 0 0;}
+.bank_title .som{font: normal 16px "Microsoft YaHei"; color: #adadad; float: left; margin-top: 51px;}
+.bank_title .huan{display: inline-block; height: 17px; font: normal 16px/17px "Microsoft YaHei"; color: #adadad; float: right; background: url("../images/huan.png") no-repeat; background-position: 0 0; padding-left: 22px; margin-top: 42px; cursor: pointer;}
+.bank_title .huan:hover{color: #ff8e20; background-position: 0 -86px;}
+.tm_box{width: 228px; height: 276px;display: block; float: left; margin-right: 15px; background-color: #fff;}
+.tm_box .top{width: 228px; height: 161px; overflow: hidden;}
+.tm_box .top>img{height: 100%;}
+.tm_box_h2{text-align: center; padding-top: 5px; border-bottom: 1px solid #ededed; font: normal 14px "Microsoft YaHei"; color: #959595;}
+.tm_box_h2 .money{font: normal 30px "Microsoft YaHei"; color: #dc0b78;}
+.tm_box .nei{height: 40px; font: normal 14px/20px "Microsoft YaHei"; color: #3a3939; margin-top: 10px; overflow:hidden;}
+.trav_hea{height: 690px; background-color: #fff;}
+.trav_hea_warp{width: 1220px;}
+.trav_hea_box{width: 285px; height: 270px;display: block; float: left; margin: 0 20px 20px 0; background-color: #fff;}
+.trav_hea_box .img_box{width: 100%; height: 183px; position: relative; overflow: hidden;}
+.trav_hea_box .img_box>img{height: 100%; vertical-align: top;}
+.trav_hea_box .img_box>span{display: inline-block; position: absolute; right: 0; bottom: 10px; padding: 4px 11px; text-align: center; font: normal 12px "Microsoft YaHei"; color: #fff; background-color: #dc0b78;}
+.trav_hea_box .img_box>span>label{font-size: 18px;cursor: pointer}
+.trav_hea_box .nei_box{width: 283px; height: 86px; border-bottom: 1px solid #e9e9e9; border-left: 1px solid #e9e9e9; border-right: 1px solid #e9e9e9;}
+.trav_hea_box .nei{height: 60px; padding: 15px 14px 0 14px; font: normal 18px/30px "Microsoft YaHei"; overflow:hidden;}
+.trav_hea_box.fir{width: 590px; height: 270px; position: relative; overflow: hidden;}
+.trav_hea_box.fir>img{height: 100%;}
+.trav_hea_box.fir .bot{width: 100%; height: 76px; position: absolute; left: 0; bottom: 13px; background: url("../images/trav_hea_bot.png") repeat;}
+.trav_hea_box.fir .bot>p{width: 423px; height: 60px;display: block; margin: 8px 0 0 10px; float: left; font: normal 20px/30px "Microsoft YaHei"; color: #fff; overflow:hidden;}
+.trav_hea_box.fir .bot>span{display: inline-block; float: right; padding: 7px 19px; margin-top: 18px; text-align: center; font: normal 14px "Microsoft YaHei"; color: #fff; background-color: #dc0b78;}
+.trav_hea_box.fir .bot>span>label{font-size: 20px;cursor: pointer}
+.ts_lx{height: 557px; background-color: #f3f3f3;}
+.ts_lx .bank_title .big{margin-right: 26px;}
+.tslu_warp{width: 1225px;}
+.tsbg_box{width: 385px; height: 275px;display: block; position: relative; overflow: hidden; margin-right: 24px;}
+.tsbg_box>img{height: 100%;}
+.tsbg_box .jiashao{width: 100%; height: 107px; position: absolute; left: 0; bottom: 0;}
+.tsbg_box .jiage{float: left; display: inline-block; padding: 7px 19px; text-align: center; font: normal 14px "Microsoft YaHei"; color: #fff; background-color: #dc0b78;}
+.tsbg_box .jiage>label{font-size: 20px;}
+.jiashao .fong_nei{width: 365px;padding: 0 10px; margin-top: 10px; float: left; font: normal 18px/24px "Microsoft YaHei"; color: #fff;}
+.tsbg_box_som{width: 382px; height: 125px; overflow: hidden; margin:0 25px 25px 0;}
+.tsbg_box_som .img_cont{width: 125px; height: 100%; float: left; overflow: hidden;}
+.tsbg_box_som .img_cont>img{height: 100%;}
+.tsbg_box_som .rig_zi{width: 257px; height: 125px; float: left; background-color: #fff;}
+.dujia_nei{height: 60px;display: block; padding: 0 15px; margin-top: 20px; font: normal 18px/30px "Microsoft YaHei";color: #000}
+.zuih_jia{display: inline-block; float: right; margin-right: 20px; font: normal 12px "Microsoft YaHei"; color: #dc0b78;}
+.zuih_jia label{font-size: 24px;cursor: pointer}
+.tsbg_box_som.du .rig_zi{height: 123px; border-top: 2px solid #d9016d;}
+/*套票页面样式结束*/
+
+/*酒店页面样式开始*/
+.hotel_ban{width: 100%; height: 583px; position:relative; top:0; zoom:1; overflow:hidden;}
+.horel_cont{width: 400%; height: 100%; position: relative;}
+.horel_cont>li{width: 25%; height: 100%; float: left;}
+.horel_cont>li>img{width: 100%; height: 100%; vertical-align: top;}
+.bottom_nav{position: absolute; z-index: 2; bottom: 16px; left: 0; width: 100%; text-align: center;}
+.bottom_nav>li{margin: 0 23px; display: inline-block; *display:inline; zoom: 1;}
+.bottom_nav>li>a{display: block; width: 134px; height: 90px; overflow: hidden; cursor: pointer; font-size: 0; border: 3px solid #fff; border-image-source: initial; border-image-slice: initial; border-image-width: initial; border-image-outset: initial; border-image-repeat: initial;}
+.bottom_nav li a.active{border-color: #dd127b;}
+.bottom_nav>li>a>img{height: 100%;}
+.h_souinput{width: 900px; height: 46px; position: absolute; top: 50%; left: 50%; margin: -40px 0 0 -475px; padding: 17px 25px; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; border: 1px solid #e9e9e9; background: url("../images/h_sou_bg.png") repeat;}
+.h_souinput >span>input{float: left; border: 1px solid #e7e7e7; margin-right: 18px; background-color: #fff;}
+.cs_name{width: 281px; height: 46px; padding-left: 20px; font: normal 16px/46px "Microsoft YaHei"; color: #b19985;}
+.sou_btn{width: 135px; height: 45px; float: right; display: inline-block; text-align: center; font: normal 16px/45px "Microsoft YaHei"; color: #fff; background-color: #dd127b; cursor: pointer;}
+.hotel_titel{height: 45px; text-align: center; border-bottom: 2px solid #e9e9e9; margin: 19px 0 35px 0;}
+.hotel_titel>span{height: 45px; display: inline-block; font: normal 24px/45px "Microsoft YaHei"; border-bottom: 2px solid #5d5d5d; color: #333333;}
+.h_tbtj{width: 584px; height: 393px; position: relative; overflow: hidden; border: 1px solid #e5e4e4;}
+.h_tbtj .big_img{height: 100%; vertical-align: top;}
+.jianj{width: 100%; height: 110px; position: absolute; left: 0; bottom: 46px; background: url("../images/hotel_bgmark.png") repeat;}
+.jianj>p{padding-left: 20px;}
+.jianj .name{display: inline-block; margin-top: 25px; font: normal 24px "Microsoft YaHei"; color: #fff;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+.zuo_zi{font: normal 14px "Microsoft YaHei"; color: #fff;cursor: pointer}
+.zuo_zi.org{color: #ff8207;}
+.jianj .qian{font: normal 24px "Microsoft YaHei"; color: #ff8207;}
+.h_tbtj .s_img{position: absolute; top: 0; left: 0;}
+.dj_hotel_warp{width: 1225px;}
+.dj_box{width: 383px; height: 268px; position:relative; float: left; margin-right: 25px;}
+.dj_box>img{height: 100%; vertical-align: top;}
+.dj_box .bg_box{position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: inline-block; background: url("../images/hotel_bgmark.png") repeat; color: #fff; text-align: center; font: normal 30px/268px "Microsoft YaHei";}
+.jd_subnav{text-align: center;}
+.jd_subnav>span{display: inline-block; width: 72px; height: 30px; margin-right: 36px; font: normal 14px/30px "Microsoft YaHei"; color: #fff; background-color: #c9c9c9; cursor: pointer;}
+.jd_subnav>span.curr{background-color: #ff7d29;}
+.jd_subnav>span:hover{background-color: #ff7d29;}
+.jd_lx_warp{width: 1220px; margin-top: 25px; padding-bottom: 13px; *padding-bottom:41px;}
+.jd_lxbox{width: 285px; height: 191px; display: block; position: relative; float: left; margin:0 20px 24px 0;}
+.jd_lxbox>img{height: 100%;}
+.lx_desc{position: absolute; left: 0; bottom: 0; width: 100%; height: 30px; display: block; background: url("../images/bg_soubox.png") repeat;}
+.lx_desc .qian{font: normal 24px "Microsoft YaHei"; color: #ff8207;cursor: pointer}
+.lx_desc .name{display:inline-block;width:170px;font: normal 14px/30px "Microsoft YaHei"; color: #fff; margin-left: 10px;overflow: hidden;text-overflow: ellipsis;  white-space: nowrap;}
+.lx_desc>span{display: inline-block; margin-right: 6px;}
+/*酒店页面样式结束*/
+
+/*景区*/
+.cs_name2{ width:525px;}
+.h_souinput2{ width:704px;margin-left: -378px}
+.sce_tit{ margin:30px 0 20px 0; font-size:30px;}
+.sce_tit>img{ vertical-align:middle; margin-right:10px;}
+.st01{ color:#d9016d;}
+.st02{ color:#1db73b;}
+.stInfor{ font-size:14px; color:#828282;}
+
+.hotSe{ width:100%; height:296px;}
+.hotSe>a{ display:block; float:left;width:160px; height:296px; position:relative;-webkit-transition-duration:500ms;-moz-transition-duration:500ms;transition-duration:500ms;}
+.hotSe>a>i{ width:100%; height:100%; background:url(../images/trav_hea_bot.png) repeat; position:absolute; top:0; left:0;}
+.hotSe_item01{background:url(../images/upload/s_img01.jpg) no-repeat center center;}
+.hotSe_item02{background:url(../images/upload/s_img02.jpg) no-repeat center center;}
+.hotSe_item03{background:url(../images/upload/s_img03.jpg) no-repeat center center;}
+.hotSe_item04{background:url(../images/upload/s_img04.jpg) no-repeat center center;}
+.hotSe_item05{background:url(../images/upload/s_img05.jpg) no-repeat center center;}
+.hotSe_item06{background:url(../images/upload/s_img02.jpg) no-repeat center center;}
+.hotSe>a.curr{ width:400px;}
+.hotse_t01,.hotse_t02{ font-size:35px; color:#fff; font-family:'SimHei'; position:absolute; }
+.hotse_t01{left:20px; bottom:20px;}
+.hotse_t02{ width:36px; left:50%; margin-left:-18px; top:30px;}
+
+.recommend{ width:1180px; height:478px; padding:20px 0 20px 20px; background:#ededed;}
+.reItem2{ display:block; float:left;width:283px; height:229px; margin:0 18px 20px 0;}
+.reItem2>span{ display:block; width:283px; height:172px; overflow:hidden;}
+.reItem2>span>img{ height:100%;}
+.reItem2>div{ width:263px; height:57px; background:#fff; padding:0 10px; overflow:hidden;}
+.reItem2>div>span{ font-size:14px; color:383838; display:block; margin:8px 0 3px 0; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.reNow2{ font-size:16px; color:#6a6a6a;}
+.reLast2{ font-size:14px; color:#aeaeae; text-decoration:line-through;}
+.reItem{ display:block; width:257px; height:478px; text-align:center; margin-right:20px;}
+.reItem>span{ display:block; width:257px; height:386px; overflow:hidden;}
+.reItem>span>img{ height:100%;}
+.reItem>div{ width:100%; height:92px; background:#fff;}
+.reItem>div>.reTag{ display:inline-block; height:24px; line-height:24px; padding:0 20px; margin:10px auto 5px auto;background:#d9016d; border-radius:24px; font-size:14px; color:#fff;}
+.reItem>div>.reTit{ font-size:18px; color:#353535; margin-bottom:5px; width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.reLast{ font-size:14px; color:#979797; text-decoration:line-through; margin-right:10px;}
+.reNow{ font-size:14px; color:#6a6a6a;}
+.rePrice{ color:#d9016d; margin-left:10px;}
+.mt17{ margin:17px 0 0 10px;}
+
+.ticItem{ display:block; float:left; width:292px; height:250px; border:1px solid #f1f1f1; margin:0 7px 25px 0;}
+.ticItem>span{ display:block; width:292px; height:192px; overflow:hidden;}
+.ticItem>span>img{ height:100%;}
+.ticItem>p{ width:272px;padding:0 10px;height:58px; line-height:58px;color:#3c3c3c;}
+.ticName{ font-size:18px; width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.ticPrice{ font-size:12px;}
+.font18{ font-size:18px;}
+/*景区*/

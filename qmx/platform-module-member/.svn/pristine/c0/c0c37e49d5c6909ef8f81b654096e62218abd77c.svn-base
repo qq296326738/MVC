@@ -1,0 +1,14 @@
+##\u914D\u7F6E\u7BA1\u7406
+##\u9009\u62E9\u4E86\u670D\u52A1\u5668\u4FA7\u7684application-dev.properties\u4F5C\u4E3A\u914D\u7F6E\u8BBE\u5B9A\u6587\u4EF6
+#spring.cloud.config.profile=dev
+#spring.cloud.config.name=admin-front
+#
+#spring.cloud.config.discovery.serviceId=config-service
+#spring.cloud.config.override-system-properties=true
+#
+##\u63A8\u8350\u4E0B\u9762\u7684\u914D\u7F6E\u65B9\u5F0F
+#spring.cloud.config.discovery.enabled=true
+#eureka.client.service-url.defaultZone=http://root:rootadminqmx028@192.168.3.250:8761/eureka/
+##\u7528\u6237\u540D\u548C\u5BC6\u7801
+#spring.cloud.config.username=root
+#spring.cloud.config.password=xx

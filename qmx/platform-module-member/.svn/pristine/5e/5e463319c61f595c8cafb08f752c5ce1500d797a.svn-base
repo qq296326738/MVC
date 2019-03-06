@@ -1,0 +1,328 @@
+package com.qmx.member.service;
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.qmx.base.api.annotation.GdsCacheConfig;
+import com.qmx.base.api.dto.PageDto;
+import com.qmx.base.api.dto.RestResponse;
+import com.qmx.base.api.enumerate.SysUserType;
+import com.qmx.base.core.base.BaseService;
+import com.qmx.base.core.utils.InstanceUtil;
+import com.qmx.coreservice.model.SysUser;
+import com.qmx.member.enumerate.InviteType;
+import com.qmx.member.enumerate.MemberSex;
+import com.qmx.member.enumerate.MemberSource;
+import com.qmx.member.enumerate.MemberState;
+import com.qmx.member.mapper.GdsMemberMapper;
+import com.qmx.member.model.GdsInitialization;
+import com.qmx.member.model.GdsInvite;
+import com.qmx.member.model.GdsMember;
+import com.qmx.member.model.GdsMemberLevel;
+import com.qmx.member.query.GdsMemberVO;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.Assert;
+
+import java.util.*;
+
+/**
+ * 会员用户管理
+ */
+@Service
+@GdsCacheConfig(cacheNS = "GDS-MEMBER", cacheName = "GdsMember")
+public class GdsMemberService extends BaseService<GdsMember> {
+    @Autowired
+    private GdsMemberMapper gdsMemberMapper;
+    @Autowired
+    private GdsMemberLevelService memberLevelService;
+    @Autowired
+    private GdsInitializationService gdsInitializationService;
+    @Autowired
+    private GdsMemberIntegeralService gdsMemberIntegeralService;
+    @Autowired
+    private GdsMemberMoneyService gdsMemberMoneyService;
+    @Autowired
+    private GdsInviteService gdsInviteService;
+
+    public void updateState() {
+        gdsMemberMapper.updateState();
+    }
+
+    public GdsMember findByOpenId(String openid) {
+        return gdsMemberMapper.findByOpenId(openid);
+    }
+
+    public PageDto<GdsMember> findList(SysUser userDto, GdsMemberVO dto) {
+        try {
+            Map<String, Object> params = InstanceUtil.transBean2StringMap(dto);
+            if (userDto.getUserType() == SysUserType.admin) {
+
+            } else if (userDto.getUserType() == SysUserType.supplier) {
+                params.put("supplierId", userDto.getId());
+            } else {
+                return new PageDto<>();
+            }
+            Page<GdsMember> page = this.query(params);
+            PageDto<GdsMember> pageDto = new PageDto<>(page.getTotal(), page.getSize(), page.getCurrent(), page.getRecords());
+            return pageDto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new PageDto<>();
+        }
+    }
+
+    @Transactional
+    public RestResponse<GdsMember> createDto(SysUser user, GdsMemberVO dto) {
+        try {
+            Assert.notNull(dto, "数据不能为空");
+            GdsMember model = new GdsMember();
+            BeanUtils.copyProperties(dto, model);
+            model.setCreateBy(user.getId());
+            model.setUpdateBy(user.getId());
+            model.setSupplierId(user.getId());
+            GdsMemberLevel memberLevel = memberLevelService.find(dto.getLevelId());
+            model.setLevelName(memberLevel.getName());
+            model.setSource(MemberSource.xsht);
+            model.setIntegral(0);
+            model.setTotalIntegral(0);
+            model.setMoney(0.00);
+//            model.setFzId(UUID.randomUUID().toString().replace("-", ""));
+            String cardNumber = this.selectCardNumberCount(user.getId());
+            model.setCardNumber(cardNumber);
+            model.setState(MemberState.normal);
+            model.setSynState(false);
+            model = this.save(model);
+            //创建会员注册积分记录
+            GdsInitialization initialization = gdsInitializationService.findBySupplierId(user.getId());
+            if (initialization != null) {
+                gdsMemberIntegeralService.createRegister(model, initialization.getIntegral());
+            }
+            return RestResponse.ok(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResponse.fail("新增用户失败");
+        }
+    }
+
+    /**
+     * 生成随机会员虚拟卡号
+     *
+     * @return
+     */
+    public String selectCardNumberCount(Long id) {
+        String cardNumber = RandomStringUtils.randomAlphanumeric(8);
+        Long count = gdsMemberMapper.selectCardNumberCount(id, cardNumber);
+        if (count != null && count > 0) {
+            return selectCardNumberCount(id);
+        }
+        return cardNumber;
+    }
+
+    public RestResponse<GdsMember> findById(Long id) {
+        GdsMember member = this.find(id);
+        return RestResponse.ok(member);
+    }
+
+    @Transactional
+    public RestResponse<GdsMember> updateDto(SysUser currentUser, GdsMemberVO dto) {
+        try {
+            Assert.notNull(dto, "数据不能为空");
+            Assert.notNull(dto.getMobile(), "手机号不能为空");
+            GdsMember member = this.find(dto.getId());
+            Long count = this.selectMobileAndIdcard(currentUser.getId(), dto);
+            if (count != null && !count.equals(0L)) {
+                return RestResponse.fail("身份证或手机号与其他用户冲突");
+            }
+            BeanUtils.copyProperties(dto, member, new String[]{"id", "enable", "createTime", "createBy", "cardNumber", "supplierId",
+                    "fzId", "openid", "money", "totalIntegral", "integral", "state", "source"});
+            GdsMemberLevel level = memberLevelService.find(dto.getLevelId());
+            member.setLevelName(level.getName());
+            member.setUpdateBy(currentUser.getId());
+            member.setSynState(false);
+            if (member.getSex() == null) {
+                member.setSex(MemberSex.unknown);
+            }
+            member.setState(MemberState.normal);
+            if (member.getPastTime().getTime() < new Date().getTime()) {
+                member.setState(MemberState.overdue);
+            }
+            member = this.update(member);
+            return RestResponse.ok(member);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResponse.fail("更新用户失败");
+        }
+    }
+
+    @Transactional
+    public RestResponse deleteDto(SysUser currentUser, Long id) {
+        try {
+            this.del(id, currentUser.getId());
+            gdsMemberIntegeralService.delBymemberId(id, currentUser.getId());
+            gdsMemberMoneyService.delBymemberId(id, currentUser.getId());
+            return RestResponse.ok(Boolean.TRUE);
+        } catch (Exception e) {
+            return RestResponse.fail(e.getMessage());
+        }
+    }
+
+    @Transactional
+    public RestResponse<GdsMember> updateMemmber(GdsMemberVO vo) {
+        try {
+            GdsMember gdsMember;
+            gdsMember = this.find(vo.getId());
+            vo.setSupplierId(gdsMember.getSupplierId());
+            gdsMember = gdsMemberMapper.selectIdcard(vo);
+            if (gdsMember != null) {
+                return RestResponse.fail("有相同的身份证号会员,请仔细填写");
+            }
+//            vo.setSynState(false);
+            gdsMemberMapper.updateMemmber(vo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResponse.fail("更新失败");
+        }
+        return RestResponse.ok();
+    }
+
+    /**
+     * 后台根据手机号和身份证查询是否有会员,有就不能注册
+     *
+     * @param currentUser
+     * @param vo
+     * @return
+     */
+    public Long selectMobileAndIdcard(Long currentUser, GdsMemberVO vo) {
+        Long aLong = gdsMemberMapper.selectMobileAndIdcard(currentUser, vo);
+        return aLong;
+    }
+
+    /**
+     * 前端登录该手机号查询会员
+     *
+     * @param userId
+     * @param mobile
+     * @return
+     */
+    public GdsMember selectMobile(Long userId, String mobile) {
+        return gdsMemberMapper.selectMobile(userId, mobile);
+    }
+
+
+    /**
+     * 前端注册会员
+     *
+     * @param userId   供应商id
+     * @param openid   微信openid
+     * @param mobile   手机号
+     * @param memberId 邀请人id
+     * @return
+     */
+    @Transactional(rollbackFor = Throwable.class)
+    public GdsMember createMember(Long userId, String openid, String mobile, Long memberId) {
+        try {
+            GdsMember model = new GdsMember();
+            model.setCreateBy(userId);
+            model.setUpdateBy(userId);
+            model.setSex(MemberSex.unknown);
+            model.setSupplierId(userId);
+            model.setMobile(mobile);
+            GdsMemberLevel memberLevel = memberLevelService.selectionLevel(userId);
+            if (memberLevel != null) {
+                model.setLevelId(memberLevel.getId());
+                model.setLevelName(memberLevel.getName());
+            } else {
+                return null;
+            }
+            if (StringUtils.isNotEmpty(openid)) {
+                model.setSource(MemberSource.wx);
+                model.setOpenid(openid);
+            } else {
+                model.setSource(MemberSource.pc);
+            }
+            model.setIntegral(0);
+            model.setTotalIntegral(0);
+            String cardNumber = this.selectCardNumberCount(userId);
+            model.setCardNumber(cardNumber);
+            model.setMoney(0.00);
+            model.setState(MemberState.normal);
+            //默认过期时间99年
+            Calendar instance = Calendar.getInstance();
+            instance.add(Calendar.YEAR, 99);
+            Date time = instance.getTime();
+            model.setPastTime(time);
+            model.setSynState(false);
+            model = this.save(model);
+            GdsInitialization initialization = gdsInitializationService.findBySupplierId(userId);
+            if (initialization != null) {
+                if (initialization.getIntegral() != null && initialization.getIntegral() > 0) {
+                    gdsMemberIntegeralService.createRegister(model, initialization.getIntegral());
+                }
+                if (initialization.getCodeMoney() != null && initialization.getCodeMoney() > 0) {
+                    if (memberId != null) {
+                        GdsInvite invite = new GdsInvite();
+                        invite.setMemberId(memberId);
+                        invite.setCodeMoney(initialization.getCodeMoney());
+                        invite.setInviteType(InviteType.YAOQING);
+                        invite.setById(model.getId());
+                        gdsInviteService.save(invite);
+                        gdsMemberMoneyService.invitationMoney(memberId, initialization.getCodeMoney());
+                    }
+                }
+            }
+            return model;
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return null;
+        }
+    }
+
+    /**
+     * 每年定时消除会员积分
+     */
+    @Transactional
+    public void timingUpdate() {
+        gdsMemberMapper.timingUpdate();
+    }
+
+    /**
+     * 查询是否有未同步,有未同步就同步
+     *
+     * @param id
+     * @return
+     */
+    @Transactional
+    public List<GdsMember> queryMemberIsUpdated(Long id) {
+        List<GdsMember> gdsMembers = gdsMemberMapper.queryMemberIsUpdated(id);
+        if (gdsMembers != null && gdsMembers.size() != 0) {
+            return gdsMembers;
+        }
+        return null;
+
+    }
+
+    @Transactional
+    public Boolean updateMemberSynState(Long id, String fzId) {
+        GdsMember gdsMember = this.find(id);
+        if (gdsMember.getSynState()) {
+            return false;
+        }
+        gdsMemberMapper.updateMemberSynState(id, fzId);
+        return true;
+    }
+
+    /**
+     * 根据线下会员id查询会员
+     *
+     * @param fzId
+     * @return
+     */
+    public GdsMember findByFzId(String fzId) {
+        return gdsMemberMapper.findByFzId(fzId);
+    }
+}

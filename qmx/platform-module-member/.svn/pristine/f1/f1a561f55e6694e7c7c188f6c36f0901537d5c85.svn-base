@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.SysApiLogMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.qmx.member.model.SysApiLog">
+		<result column="id" property="id" />
+		<result column="cost_time" property="costTime" />
+		<result column="enable_" property="enable_" />
+		<result column="create_by" property="createBy" />
+		<result column="create_time" property="createTime" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_time" property="updateTime" />
+		<result column="remark" property="remark" />
+
+		<result column="order_id" property="orderId" />
+		<result column="app_key" property="appKey" />
+		<result column="account" property="account" />
+		<result column="api_plat" property="apiPlat" />
+		<result column="request_uri" property="requestUri" />
+		<result column="request_method" property="requestMethod" />
+		<result column="request_content" property="requestContent" />
+		<result column="result_content" property="resultContent" />
+		<result column="request_ip" property="requestIp" />
+		<result column="success" property="success" />
+	</resultMap>
+
+	<sql id="Base_Condition">
+		<where>
+			<if test="cm.orderId != null">
+				and order_id = #{cm.orderId}
+			</if>
+			<if test="cm.appKey != null">
+				and app_key = #{cm.appKey}
+			</if>
+			<if test="cm.account != null">
+				and account = #{cm.account}
+			</if>
+			<if test="cm.apiPlat != null">
+				and api_plat = #{cm.apiPlat}
+			</if>
+			<if test="cm.requestUri != null">
+				and request_uri = #{cm.requestUri}
+			</if>
+			<if test="cm.requestMethod != null">
+				and request_method = #{cm.requestMethod}
+			</if>
+			<if test="cm.requestContent != null">
+				and request_content = #{cm.requestContent}
+			</if>
+			<if test="cm.resultContent != null">
+				and result_content = #{cm.resultContent}
+			</if>
+			<if test="cm.requestIp != null">
+				and request_ip = #{cm.requestIp}
+			</if>
+			<if test="cm.success != null">
+				and success = #{cm.success}
+			</if>
+			<if test="cm.keyword != null and cm.keyword != ''">
+				and (
+				or order_id like CONCAT('%',#{cm.keyword},'%')
+				or app_key like CONCAT('%',#{cm.keyword},'%')
+				or account like CONCAT('%',#{cm.keyword},'%')
+				or api_plat like CONCAT('%',#{cm.keyword},'%')
+				or request_uri like CONCAT('%',#{cm.keyword},'%')
+				or request_method like CONCAT('%',#{cm.keyword},'%')
+				or request_content like CONCAT('%',#{cm.keyword},'%')
+				or result_content like CONCAT('%',#{cm.keyword},'%')
+				or request_ip like CONCAT('%',#{cm.keyword},'%')
+				or success like CONCAT('%',#{cm.keyword},'%')
+				)
+			</if>
+		</where>
+	</sql>
+
+	<select id="selectListEX" resultMap="BaseResultMap">
+		select * from sys_api_log
+		<include refid="Base_Condition"/>
+	</select>
+</mapper>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberIntegeralMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberIntegeral">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="member_id" property="memberId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+        <result column="record_id" property="recordId"/>
+        <result column="recharge_type" property="rechargeType"/>
+        <result column="sn" property="sn"/>
+        <result column="time" property="time"/>
+        <result column="integeral" property="integeral"/>
+        <result column="source_type" property="sourceType"/>
+        <result column="balance_integeral" property="balanceIntegeral"/>
+        <result column="product_id" property="productId"/>
+        <result column="product_name" property="productName"/>
+        <result column="record_type" property="recordType"/>
+        <result column="status" property="status"/>
+        <result column="sn_text" property="snText"/>
+        <result column="syn_state" property="synState"/>
+        <result column="fz_id" property="fzId"/>
+    </resultMap>
+
+    <sql id="Base_Condition">
+        <where>
+            member_id = #{cm.memberId}
+            <if test="cm.sn != null and cm.sn != ''">
+                and sn = #{cm.sn}
+            </if>
+            <if test="cm.recordType != null">
+                and record_type = #{cm.recordType}
+            </if>
+            <if test="cm.time != null">
+                and DATE_FORMAT(time,'%Y%m%d') = DATE_FORMAT(#{cm.time},'%Y%m%d')
+            </if>
+            <if test="cm.synState != null">
+                and syn_state = #{cm.synState}
+            </if>
+            and enable_ = 1
+        </where>
+    </sql>
+
+    <select id="selectListEX" resultMap="BaseResultMap">
+        select * from gds_member_integeral
+        <include refid="Base_Condition"/>
+        ORDER BY time DESC
+    </select>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        SELECT
+          id,source_type,time,integeral,product_name,record_type
+        FROM
+          gds_member_integeral
+        WHERE
+          member_id = #{id}
+        AND
+           syn_state = 1
+        ORDER BY time DESC
+    </select>
+
+    <select id="findByRecordId" resultMap="BaseResultMap">
+        SELECT
+            i.sn_text AS sn_text,
+            i.time AS 'time',
+            i.sn AS sn,
+            i.remark AS remark,
+            i.integeral AS integeral,
+            i.recharge_type AS recharge_type,
+            i.source_type AS source_type,
+            i.record_type AS record_type,
+            m.actual_money AS actualMoney,
+            m.money AS money,
+            m.donation_money AS donationMoney
+        FROM
+            gds_member_integeral i
+        LEFT JOIN gds_member_money m ON i.record_id = m.id
+        WHERE i.id = #{id}
+    </select>
+
+    <select id="getExchangeList" resultMap="BaseResultMap">
+        SELECT
+          id,source_type,time,integeral,product_name,record_type
+        FROM
+          gds_member_integeral
+        WHERE
+          member_id = #{id}
+         AND
+            source_type = "duihuan"
+        ORDER BY time DESC
+    </select>
+
+    <select id="queryIntegeralIsUpdated" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_integeral
+        WHERE supplier_id = #{id}
+        AND  syn_state = 0
+        AND enable_ = 1
+        LIMIT 20
+    </select>
+
+    <update id="updaMemberIntegeralSyn">
+        UPDATE gds_member_integeral SET syn_state = 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="delBymemberId">
+        UPDATE gds_member_integeral SET enable_ = 0 ,create_by = #{userId},create_time = #{date}
+        WHERE member_id = #{id}
+    </update>
+
+    <select id="findBySn" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_integeral
+        WHERE sn = #{sn}
+        AND member_id = #{id}
+        LIMIT 1
+    </select>
+
+</mapper>

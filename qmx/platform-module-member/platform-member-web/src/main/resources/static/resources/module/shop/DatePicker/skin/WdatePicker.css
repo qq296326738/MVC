@@ -1,0 +1,34 @@
+.Wdate{
+	width: 187px;
+	height: 46px;
+	padding-left: 15px;
+	font: normal 16px/46px "Microsoft YaHei";
+	background:url("data.png") no-repeat 167px center;
+	background-color:#fff;
+	color: #585858;
+	cursor: pointer;
+}
+.WdateFmtErr{
+	font-weight:bold;
+	color:red;
+}
+
+.Wdate2{
+	width: 217px;
+	height: 31px;
+	line-height: 31px;
+	text-align: left;
+	padding-left: 10px;
+	border: 1px solid #ababab;
+	border-radius: 2px;
+	cursor: pointer;
+ }
+.Wdate3{
+	width: 160px;
+	height: 28px;
+	padding-left: 10px;
+	border: 1px solid #dedede;
+	font: normal 12px/28px "SimSun";
+	background:url("data.png") no-repeat 141px center;
+	margin-right: 5px;
+}

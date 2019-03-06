@@ -1,0 +1,79 @@
+/*轮播器*/
+/*登录页头轮播器*/
+.login_top .slider_box{
+	position:relative;
+	width:1020px;
+	margin:0 auto;
+}
+.login_top .slider{
+	width:1920px;
+	overflow:hidden;
+	position:relative;
+	left:50%;
+	margin-left:-960px;
+	display:block;
+}
+.login_top .slider .sli_c{
+	width:746px;
+	margin:0 auto;	
+	text-align:right;
+	padding-right:324px;
+	position:absolute;
+	left:50%;
+	margin-left:-560px;
+	bottom:20px;
+	z-index:15;
+}
+.login .slider .sli_c ul{
+	display:inline-block;
+	*display:inline;
+	*zoom:1;
+	margin-right:10px;
+}
+.login .slider .sli_c li{
+	float:left;
+	background-color:#fff;
+	display:inline-block;
+	width:14px;
+	height:14px;
+	border:solid 1px transparent;
+	border-radius:50%;
+	margin-right:10px;
+}
+.login .slider .sli_c li.picth{
+	background-color:#dd127b;	
+}
+.login_top .slider .sli_v{
+	width:1920px;
+	height:456px;	
+}
+.login_top .slider .sli_v img{
+	border:none;
+	width:1920px;
+	height:456px;
+}
+/*登陆页案例轮播*/
+.log_con_case .slider_box{
+	position:relative;
+	width:1020px;
+	height:685px;	
+}
+.log_con_case .slider{
+	width:1020px;
+}
+.log_con_case .slider .sli_c{
+	position:absolute;
+	width:1020px;
+	bottom:0px;
+	text-align:center;
+	z-index:20;
+}
+.log_con_case .slider .sli_c li{
+	background-color:#504e4e;	
+}
+.log_con_case .slider .sli_v{
+	/*position:relative;*/
+}
+.log_con_case .case_list_li{
+	float:left;
+}

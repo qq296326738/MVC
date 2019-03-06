@@ -1,0 +1,88 @@
+package com.qmx.member.front.controller.member;
+
+import com.qmx.base.api.dto.RestResponse;
+import com.qmx.member.model.GdsMember;
+import com.qmx.member.model.GdsMemberSign;
+import com.qmx.member.service.GdsMemberService;
+import com.qmx.member.service.GdsMemberSignService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
+/**
+ * 会员签到
+ */
+@Controller
+@RequestMapping("/member")
+public class MemberSignController {
+
+    @Autowired
+    private GdsMemberSignService gdsMemberSignService;
+    @Autowired
+    private GdsMemberService gdsMemberService;
+
+    /**
+     * 进入-每日签到
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/sign")
+    public String sign(Long id, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        GdsMember gdsMember = gdsMemberService.find(id);
+        if (gdsMember != null) {
+            if (StringUtils.isEmpty(gdsMember.getFzId())) {
+//                throw new BusinessException("会员信息暂未同步,请稍后再试");
+                model.addAttribute("msg", "会员信息暂未同步,请稍后再试");
+                return "common/error";
+            }
+        }
+        //查询积分总记录
+        GdsMemberSign memberSign = gdsMemberSignService.getSignById(id);
+        //查询每日积分记录
+        List<GdsMemberSign> list = gdsMemberSignService.getSignTimeById(id, 0);
+        //查询今天是否签到
+        boolean fale = gdsMemberSignService.findByMemberId(id) != null;
+        model.addAttribute("fale", fale);
+        model.addAttribute("data", memberSign);
+        model.addAttribute("list", list);
+        model.addAttribute("id", id);
+        return "member/memberSign/sign";
+    }
+
+    /**
+     * 每日签到-签到
+     */
+    @ResponseBody
+    @RequestMapping(value = "/addSign")
+    public GdsMemberSign addSign(Long id) {
+        Assert.notNull(id, "用户id不能为空");
+        RestResponse<GdsMemberSign> data = gdsMemberSignService.add(id);
+        if (data.success()) {
+            return data.getData();
+        }
+        return null;
+    }
+
+    /**
+     * 每日签到-查看更多
+     */
+    @ResponseBody
+    @RequestMapping(value = "/addTimeSign")
+    public List<GdsMemberSign> addTimeSign(Long id, Integer size) {
+        Assert.notNull(id, "用户id不能为空");
+        int s = (size - 1) * 5;
+        List<GdsMemberSign> data = gdsMemberSignService.getSignTimeById(id, s);
+        return data;
+    }
+
+}
+

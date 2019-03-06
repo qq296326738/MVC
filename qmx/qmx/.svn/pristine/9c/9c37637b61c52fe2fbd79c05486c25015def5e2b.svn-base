@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Mon Nov 05 10:10:47 CST 2018
+platform-base-core-0.3.0-SNAPSHOT.jar>=
+platform-base-core-0.3.0-SNAPSHOT.pom>=

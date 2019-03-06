@@ -1,0 +1,185 @@
+﻿@charset "utf-8";
+/* CSS Document */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, dd, dl, dt, li, ol, ul,input,select,button,textarea { padding:0; margin:0; border:none;}
+input,button,select,textarea,a,img{outline:none; }/*去掉超链接或按钮点击时出现的虚线框黄色边框*/
+::-moz-focus-inner{border:0px;}/*火狐的私有属性去掉点击时边框*/
+body {font-size:12px; width:100%;  font-family:"Microsoft YaHei","Arial", "SimSun"; overflow-x:hidden; position:relative;}
+html{ width:100%; overflow-x:hidden;}
+a img {	border:none;}
+a img {	border:none;}
+ul, ul li, ol li, li {	list-style:none;}
+table {	border-collapse: collapse;border-spacing:0;}
+input, textarea {border: 0;}
+.clearfix:after {visibility: hidden;display: block;font-size: 0;content: ".";clear: both;height: 0;}
+.clearfix *{ z-index:1;}
+* html .clearfix {zoom: 1;}
+*:first-child + html .clearfix {zoom: 1;}
+.fl {	float:left;}
+.fr {	float:right;}
+.none{	display:none;}
+a{ cursor:pointer; text-decoration:none;}
+.base{ width:1200px; margin:0 auto; position:relative;}
+.centerTop{ padding-top:111px;}
+/*头部样式*/
+.head{ width:100%; background:url(../images/navbg.jpg) repeat-x;}
+.head_wel{ width:100%; height:39px; line-height:39px; font-size:12px; color:#fff;}
+.head_wel a{ color:#fff;}
+.mylxb,.focus>a{ display:block;height:13px; margin-top:14px; line-height:13px;}
+.mylxb{ padding-left:11px; border-left:1px solid #5b5b5b;}
+.focus{ width:89px; height:39px; line-height:39px;text-align:center; position:relative; cursor:pointer;-webkit-transition-duration:300ms;-moz-transition-duration:300ms;transition-duration:300ms;z-index:99;}
+.focus>a{border-right:1px solid #6e6e6e; margin-right:-1px;}
+.focus>a>i{ display:inline-block;width:10px; height:6px; background:url(../images/nav_jt.png) no-repeat; background-position:0 0; margin-left:5px; margin-top:-2px;vertical-align:middle;}
+.focusHover{display:none;width:268px; height:105px; padding:0 10px;position:absolute; right:-1px; bottom:-107px; background:#fff; border:1px solid #d3d3d3;text-align:left;box-shadow: 1px 1px 1px #cfcece;z-index: 21 !important;}
+.focusHover>p{ width:145px; line-height:18px; font-size:12px; color:#333;}
+.focusHover>p>span{ display:block; margin-top:10px;}
+.focusHover>img{ margin-top:4px;}
+.color_pink{ color:#dd127b;}
+.focus:hover{ background:#fff;}
+.focus:hover>a{ color:#333;}
+.focus:hover>a>i{ background-position:0 -6px;}
+
+.headBox{ width:100%; height:71px;}
+.head_nav{ margin-left:33px;}
+.head_nav>li{ float:left;}
+.head_nav>li>a{ display:block; height:71px; line-height:71px;font-size:18px; color:#333; padding:0 21px; margin-right:17px;}
+.head_nav>li.curr>a,.head_nav>li:hover>a{ background:#dd127b; color:#fff;}
+.head_tel{ margin-top:12px;}
+.head_tel>img{ margin:3px 7px 0 0;}
+.head_tel>p{ font-size:24px; color:#dd127b;}
+.head_tel>p>span{ display:block;font-size:14px; color:#737373;}
+
+/*底部样式*/
+.foot{ width:100%; height:358px; background:url(../images/footBg.jpg) repeat-x; z-index:9;}
+.foot_tag{ width:100%; height:39px; padding:4px 0 7px 0;}
+.foot_tag>span{ display:block; float:left; height:39px; line-height:39px;margin-right:80px; font-size:16px; color:#fff;}
+.foot_tag>span>i{ display:inline-block; vertical-align:middle;width:39px; height:39px; background:url(../images/footicon.png) no-repeat; margin-right:13px;}
+.foot_tag>span.tag01{ margin-left:70px;}
+.foot_tag>span.tag01>i{ background-position:0 0;}
+.foot_tag>span.tag02>i{ background-position:0 -39px;}
+.foot_tag>span.tag03>i{ background-position:0 -78px;}
+.foot_tag>span.tag04>i{ background-position:0 -117px;}
+.foot_tag>span.tag05>i{ background-position:0 -156px;}
+
+.footBox{ width:100%; height:190px; padding-top:35px;}
+.foodInfor{ font-size:14px; color:#fff; line-height:30px; margin-right:110px;}
+.footBox>ul{ margin-right:127px; text-align:center; float:left;}
+.footBox>ul>li{ font-size:16px; color:#fff; margin-bottom:15px;}
+.footBox>ul>li>a{ font-size:14px; color:#cecece;}
+.foot_ewm{ text-align:center; font-size:14px; color:#fff;}
+.foot_ewm>img{ margin-bottom:12px; display:block;}
+.foot_p{ height:40px;padding:18px 0 24px 0; border-top:1px solid #555;}
+.foot_p>span{ display:inline-block; vertical-align:top;height:40px; line-height:40px; font-size:14px; color:#fff; margin-right:45px;}
+.foot_p>span>a{ color:#fff;}
+.foot_p>a{ margin-right:30px;}
+
+/*返回顶部*/
+.backTop{
+	display:none;
+	width:66px;
+	padding-top:10px;
+	padding-bottom:10px;
+	height:46px;
+	line-height:23px;
+	background:url(../images/backTop.png) no-repeat scroll #dd0f79 center center;
+	border:solid 1px transparent;
+	border-radius:5px;
+	position:fixed;
+	left:50%;
+	margin-left:650px;
+	color:#fff;
+	text-align:center;
+	top:50%;
+	margin-top:-33px;
+	z-index:11;
+}
+.backTop.small{
+	left:auto;
+	margin-left:auto;
+	right:10px;
+	z-index:99;
+}
+.backTop span{
+	display:none;
+	font-size:16px;
+	color:#fff;
+}
+.backTop:hover{
+	background:#dd0f79;
+}
+.backTop:hover span{
+	display:block;
+}
+
+/*首页侧边栏*/
+.aside{
+	width:100%;
+	height:180px;
+	background:url(../images/index_aside_bg.png) repeat;
+	position:fixed;
+	bottom:0;
+	z-index:10;
+	left:-100%;
+}
+.asi_box{
+	width:1040px;
+	padding-left:80px;
+	padding-right:80px;
+	margin:0 auto;
+}
+.asi_box_img{
+	width:582px;
+	height:220px;
+	display:inline-block;
+	margin-top:-40px;
+	*float:left;
+}
+.asi_box_QR{
+	float:right;
+	color:#fff;
+	overflow:hidden;
+	padding:30px 20px;
+	height:120px;
+	width:348px;
+	background:url(../images/index_aside_right_bg.png) repeat;
+}
+.asi_QR_left{
+	text-align:right;
+	width:198px;
+	float:left;
+}
+.asi_QR_left h2{
+	font-size:22px;
+	font-weight:100;
+	margin-bottom:5px;
+}
+.asi_QR_left p{
+	font-size:18px;
+	color:#ffc000;
+	margin-bottom:5px;
+}
+.asi_QR_right{
+	float:right;
+	display:inline-block;
+	width:120px;
+	height:120px;
+}
+.asi_QR_right img{
+	width:120px;
+	height:120px;
+}
+.asi_close{
+	display:block;
+	width:40px;
+	height:40px;
+	float:right;
+	background:url(../images/index_aside_close.png) no-repeat scroll center center;
+	margin-left:10px;
+	margin-top:10px;
+}
+.aside_prompt{
+	position:fixed;
+	bottom:0;
+	left:0;
+	z-index:11;
+	cursor:pointer;
+}

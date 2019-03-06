@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberExchangeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberExchange">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+        <result column="exchange_product_type" property="exchangeProductType"/>
+        <result column="image" property="image"/>
+        <result column="text" property="text"/>
+        <result column="product_name" property="productName"/>
+        <result column="integeral" property="integeral"/>
+        <result column="deliver_type" property="deliverType"/>
+        <result column="expiry_time" property="expiryTime"/>
+        <result column="state" property="state"/>
+        <result column="money" property="money"/>
+        <result column="integral_proportion" property="integralProportion"/>
+
+    </resultMap>
+
+    <select id="selectIdPage" resultType="java.lang.Long">
+        select id from gds_member_exchange
+        <where>
+            <if test="cm.exchangeProductType != null">
+              and exchange_product_type = #{cm.exchangeProductType}
+            </if>
+            <if test="cm.productName != null and cm.productName != ''">
+              and product_name = #{cm.productName}
+            </if>
+            <if test="cm.deliverType != null">
+              and deliver_type = #{cm.deliverType}
+            </if>
+            <if test="cm.supplierId != null and cm.supplierId !=''">
+                and supplier_id = #{cm.supplierId}
+            </if>
+            and enable_ = 1
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updateState">
+        UPDATE gds_member_exchange set state = 0
+        WHERE TO_DAYS(NOW()) - TO_DAYS(expiry_time) > 0
+        and enable_ = 1
+    </update>
+
+    <select id="findExchangeList" resultMap="BaseResultMap">
+        SELECT
+        id ,image,product_name,integeral,money
+        FROM gds_member_exchange
+        <where>
+            <if test="type != null">
+                AND exchange_product_type = #{type}
+            </if>
+            AND supplier_id = #{supplierId}
+            AND enable_ = 1
+            AND state = 1
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+</mapper>

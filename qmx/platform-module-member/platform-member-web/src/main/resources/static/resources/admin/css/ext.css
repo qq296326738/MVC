@@ -1,0 +1,328 @@
+.productImageArea {
+    width: 100%;
+}
+
+.productImageArea .example {
+    width: 130px;
+    height: 130px;
+    float: left;
+    display: inline;
+    word-break: break-all;
+    word-wrap: break-word;
+    background: url(../images/input_bg.gif) no-repeat -270px 0px;
+}
+
+.productImageArea .prev {
+    width: 8px;
+    height: 130px;
+    display: block;
+    float: left;
+    margin-right: 5px;
+    outline: none;
+    border: 1px solid #ededed;
+    background: url(../images/input_bg.gif) -210px 0px #fafafa no-repeat;
+}
+
+.productImageArea .prev:hover {
+    border: 1px solid #cccccc;
+    background-color: #f3f3f3;
+}
+
+.productImageArea .next {
+    width: 8px;
+    height: 130px;
+    display: block;
+    float: left;
+    margin-left: 5px;
+    outline: none;
+    border: 1px solid #ededed;
+    background: url(../images/input_bg.gif) -240px 0px #fafafa no-repeat;
+}
+
+.productImageArea .next:hover {
+    border: 1px solid #cccccc;
+    background-color: #f3f3f3;
+}
+
+.productImageArea .scrollable {
+    /*width: 1304px;*/
+    width: 510px;
+    height: 130px;
+    line-height: 130px;
+    float: left;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #cccccc;
+}
+
+.productImageArea .items {
+    width: 20000em;
+    position: absolute;
+}
+
+.productImageArea li {
+    width: 90px;
+    height: 90px;
+    display: block;
+    float: left;
+    margin: 5px;
+    text-align: center;
+}
+
+.productImageArea .productImageBox {
+    position: relative;
+}
+
+.productImageArea .productImageBox .productImagePreview {
+    width: 90px;
+    height: 90px;
+    line-height: 90px;
+    color: #969696;
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 0;
+    filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale);
+    border: 1px solid #cfcfcf;
+}
+
+.productImageArea .productImageBox .productImagePreview:hover {
+    border: 1px solid #ffc097;
+}
+
+.productImageArea .productImageBox .productImagePreview img {
+    width: 90px;
+    height: 90px;
+}
+
+.productImageArea .productImageBox .productImageOperate {
+    width: 90px;
+    height: 25px;
+    display: none;
+    padding-top: 3px;
+    padding-left: 13px;
+    position: absolute;
+    top: 66px;
+    left: 1px;
+    z-index: 1;
+    background: url(../images/product_image_operate_bg.png) no-repeat 0px 0px;
+}
+
+.productImageArea .productImageBox .productImageOperate .left {
+    width: 19px;
+    height: 19px;
+    display: block;
+    float: left;
+    margin-right: 1px;
+    overflow: hidden;
+    outline: none;
+}
+
+.productImageArea .productImageBox .productImageOperate .right {
+    width: 19px;
+    height: 19px;
+    display: block;
+    float: left;
+    margin-right: 1px;
+    overflow: hidden;
+    outline: none;
+}
+
+.productImageArea .productImageBox .productImageOperate .delete {
+    width: 19px;
+    height: 19px;
+    display: block;
+    float: left;
+    overflow: hidden;
+    outline: none;
+}
+
+.productImageArea .productImageBox .productImageUploadButton {
+    width: 74px;
+    height: 22px;
+    line-height: 22px;
+    display: block;
+    overflow: hidden;
+    position: relative;
+    top: 97px;
+    left: 0px;
+    outline: none;
+    cursor: pointer;
+    border: none;
+    background: url(../images/input_bg.gif) no-repeat 0px -60px;
+}
+
+.productImageUploadButtonFour {
+	width: 74px;
+	height: 22px;
+	line-height: 22px;
+	display: block;
+	overflow: hidden;
+	position: relative;
+	top: 97px;
+	left: 0px;
+	outline: none;
+	cursor: pointer;
+	border: none;
+	background: url(../images/input_bg.gif) no-repeat 0px -60px;
+}
+
+.productImageArea .productImageBox .productImageUploadButton input {
+    width: 74px;
+    height: 22px;
+    line-height: 22px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1;
+    opacity: 0;
+    filter: alpha(opacity=0);
+    font-size: 40px;
+    direction: rtl;
+    cursor: pointer;
+}
+
+.productImageUploadButtonFour input {
+	width: 74px;
+	height: 22px;
+	line-height: 22px;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 1;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+	font-size: 40px;
+	direction: rtl;
+	cursor: pointer;
+}
+
+.productImageArea .productImageBox .productImageUploadButton div {
+    width: 74px;
+    height: 22px;
+    line-height: 22px;
+    text-align: center;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 0;
+    cursor: pointer;
+}
+
+.productImageUploadButtonFour div {
+	width: 74px;
+	height: 22px;
+	line-height: 22px;
+	text-align: center;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 0;
+	cursor: pointer;
+}
+
+.blank {
+    width: 90%;
+    height: 10px;
+    clear: both;
+    overflow: hidden;
+}
+
+span.warnInfo {
+    height: 25px;
+    line-height: 23px;
+    display: inline-block;
+    display: -moz-inline-stack;
+    zoom: 1;
+    *display: inline;
+    padding: 0px 5px;
+    border: 1px solid #ffca80;
+    background-color: #fffee2;
+}
+
+span.warnInfo .icon {
+    width: 18px;
+    height: 25px;
+    line-height: 25px;
+    display: inline-block;
+    display: -moz-inline-stack;
+    zoom: 1;
+    *display: inline;
+    background: url(../images/message_bg.gif) no-repeat 0px -150px;
+}
+
+span.warnIcon {
+    width: 16px;
+    height: 29px;
+    line-height: 29px;
+    display: inline-block;
+    display: -moz-inline-stack;
+    zoom: 1;
+    *display: inline;
+    background: url(../images/message_bg.gif) no-repeat -30px -150px;
+}
+
+/**validate**/
+/*
+.requireField {
+	line-height: 12px;
+	padding: 5px;
+	zoom: 1;
+}
+
+input.validateError {
+	background-color: #FFF8EF;
+    border: 1px dotted #FF9B10;
+}
+
+label.validateError {
+	line-height: 25px;
+	height: 25px;
+	zoom: 1;
+	border: 1px solid #ffca88;
+	background-color: #fffeee;
+	margin-left: 5px;
+	padding: 2px;
+}
+*/
+/* ---------- Validate ---------- */
+/*
+.validateErrorContainer {
+	line-height: 20px;
+	display: none;
+	clear: both;
+	padding: 5px 8px;
+	margin: 5px;
+	border: 1px solid #febe8f;
+	background-color: #fff8d9;
+}
+
+.validateErrorContainer .validateErrorTitle {
+	height: 30px;
+	line-height: 30px;
+	clear: both;
+	font-weight: bold;
+	padding-left: 35px;
+	background: url(../images/base_icon.gif) 0px -540px no-repeat;
+}
+
+.validateErrorContainer li {
+	padding-left: 35px;
+}
+
+input.validateError {
+	background-color: #fff8ef;
+	border: dotted 1px #ff9b10;
+}
+
+select.validateError {
+	background-color: #fff8ef;
+	border: dotted 1px #ff9b10;
+}
+*/
+/**Other**/
+
+.hide {
+    display: none;
+}

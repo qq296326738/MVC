@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberRechargeRuleMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberRechargeRule">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="member_id" property="memberId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+        <result column="level_id" property="levelId"/>
+        <result column="type" property="type"/>
+        <result column="amount" property="amount"/>
+        <result column="level_name" property="levelName"/>
+        <result column="min_amount" property="minAmount"/>
+        <result column="max_amount" property="maxAmount"/>
+        <result column="give" property="give"/>
+        <result column="integral_point" property="integralPoint"/>
+        <result column="money_point" property="moneyPoint"/>
+        <result column="discount_point" property="discountPoint"/>
+
+    </resultMap>
+
+    <sql id="Base_Condition">
+        <where>
+            <if test="cm.levelId != null and cm.levelId != ''">
+                and level_id = #{cm.levelId}
+            </if>
+            <if test="cm.type != null">
+                and type = #{cm.type}
+            </if>
+            <if test="cm.give != null">
+                and give = #{cm.give}
+            </if>
+            <if test="cm.levelId != null and cm.levelId !=''">
+                and level_id = #{cm.levelId}
+            </if>
+            <if test="cm.levelName != null and cm.levelName !=''">
+                and level_name = #{cm.levelName}
+            </if>
+            <if test="cm.supplierId != null and cm.supplierId !=''">
+                and supplier_id = #{cm.supplierId}
+            </if>
+            and enable_ = 1
+        </where>
+    </sql>
+
+    <select id="selectListEX" resultMap="BaseResultMap">
+        select * from gds_member_recharge_rule
+        <include refid="Base_Condition"/>
+        -- ORDER BY create_time DESC
+        ORDER BY level_name
+    </select>
+
+    <select id="findByLevelId" resultMap="BaseResultMap">
+        select * from gds_member_recharge_rule
+        where level_id = #{levelId}
+        and enable_ = 1
+        ORDER BY CONVERT(type USING gbk);
+    </select>
+
+    <select id="findRules" resultMap="BaseResultMap">
+        select * from gds_member_recharge_rule
+        <where>
+            <if test="dto.id != null">
+                and id &lt;&gt; #{dto.id}
+            </if>
+            and level_id = #{dto.levelId}
+            <if test='cm.userType.name == "供应商" '>
+                AND supplier_id = #{cm.id}
+            </if>
+            <if test="dto.type.name == 'section'">
+                and
+                (
+                   (min_amount &lt;= #{dto.minAmount} and #{dto.minAmount} &lt; max_amount)
+                or (min_amount &lt; #{dto.maxAmount} and #{dto.maxAmount} &lt;= max_amount)
+                or (min_amount &lt;= #{dto.minAmount} and #{dto.maxAmount} &lt;= max_amount)
+                or (min_amount &gt;= #{dto.minAmount} and #{dto.maxAmount} &gt;= max_amount)
+                )
+            </if>
+            <if test="dto.type.name == 'fixed'">
+                and amount = #{dto.amount}
+            </if>
+            and enable_ = 1
+        </where>
+    </select>
+
+    <update id="delByLevenId">
+        UPDATE gds_member_recharge_rule SET enable_ = 0 WHERE level_id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,74 @@
+package com.qmx.member.model;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.qmx.base.api.base.BaseModel;
+
+/**
+ * 会员二维码分享
+ */
+@TableName("gds_invite")
+public class GdsInvite extends BaseModel {
+    /**
+     * 邀请人id
+     */
+    @TableField("member_id")
+    private Long memberId;
+    /**
+     * 被邀人openid
+     */
+    @TableField("openid")
+    private String openid;
+    /**
+     * 被邀人是否关注公众号
+     */
+    @TableField("state")
+    private Boolean state;
+    /**
+     * 分享赠送积分
+     */
+    @TableField("code_integral")
+    private Integer codeIntegral;
+
+    public GdsInvite() {
+    }
+
+    public GdsInvite(Long memberId, String openid, Boolean state, Integer codeIntegral) {
+        this.memberId = memberId;
+        this.openid = openid;
+        this.state = state;
+        this.codeIntegral = codeIntegral;
+    }
+
+    public Integer getCodeIntegral() {
+        return codeIntegral;
+    }
+
+    public void setCodeIntegral(Integer codeIntegral) {
+        this.codeIntegral = codeIntegral;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public String getOpenid() {
+        return openid;
+    }
+
+    public void setOpenid(String openid) {
+        this.openid = openid;
+    }
+
+    public Boolean getState() {
+        return state;
+    }
+
+    public void setState(Boolean state) {
+        this.state = state;
+    }
+}

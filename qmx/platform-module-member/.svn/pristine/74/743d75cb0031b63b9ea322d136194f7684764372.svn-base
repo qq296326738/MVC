@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMember">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="member_id" property="memberId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+        <result column="car_no" property="cardNo"/>
+        <result column="card_number" property="cardNumber"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="idcard" property="idcard"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="source" property="source"/>
+        <result column="level_id" property="levelId"/>
+        <result column="level_name" property="levelName"/>
+        <result column="state" property="state"/>
+        <result column="past_time" property="pastTime"/>
+        <result column="integral" property="integral"/>
+        <result column="total_integral" property="totalIntegral"/>
+        <result column="money" property="money"/>
+
+        <result column="countries" property="countries"/>
+        <result column="ethnic" property="ethnic"/>
+        <result column="password" property="password"/>
+        <result column="work_unit" property="workUnit"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="address" property="address"/>
+        <result column="image" property="image"/>
+        <result column="user_id" property="userId"/>
+        <result column="user_name" property="userName"/>
+        <result column="wx_open_id" property="openid"/>
+        <result column="origin" property="origin"/>
+        <result column="nickname" property="nickName"/>
+        <result column="syn_state" property="synState"/>
+        <result column="fz_id" property="fzId"/>
+        <result column="postal_Code" property="postalCode"/>
+
+    </resultMap>
+
+    <select id="selectIdPage" resultType="java.lang.Long">
+        select id from gds_member
+        <where>
+            <if test="cm.cardNo != null and cm.cardNo != ''">
+                and car_no = #{cm.cardNo}
+            </if>
+            <if test="cm.name != null and cm.name != ''">
+                and name = #{cm.name}
+            </if>
+            <if test="cm.state != null">
+                and state = #{cm.state}
+            </if>
+            <if test="cm.mobile != null and cm.mobile !=''">
+                and mobile = #{cm.mobile}
+            </if>
+            <if test="cm.supplierId != null and cm.supplierId !=''">
+                and supplier_id = #{cm.supplierId}
+            </if>
+            <if test="cm.synState != null">
+                and syn_state = #{cm.synState}
+            </if>
+            and enable_ = 1
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updateState">
+        UPDATE gds_member set state = 'overdue'
+        WHERE TO_DAYS(NOW()) - TO_DAYS(past_time) > 0 AND state != 'overdue'
+        AND enable_ = 1
+    </update>
+
+    <select id="findByOpenId" resultMap="BaseResultMap">
+        SELECT * FROM gds_member WHERE wx_open_id = #{openid} AND enable_ = 1
+    </select>
+
+    <update id="updateMemmber">
+        UPDATE gds_member
+        <set>
+            syn_state = 0,
+            <if test="cm.image != null and cm.image != ''">
+                image = #{cm.image},
+            </if>
+            <if test="cm.levelName != null and cm.levelName != ''">
+                level_name = #{cm.levelName},
+            </if>
+            <!--<if test="cm.cardNumber != null and cm.cardNumber != ''">-->
+            <!--card_number = #{cm.cardNumber},-->
+            <!--</if>-->
+            <if test="cm.name != null and cm.name != ''">
+                name = #{cm.name},
+            </if>
+            <if test="cm.idcard != null and cm.idcard != ''">
+                idcard = #{cm.idcard},
+            </if>
+            <if test="cm.nickName != null and cm.nickName != ''">
+                nickname = #{cm.nickName},
+            </if>
+            <!--<if test="cm.mobile != null and cm.mobile != ''">-->
+            <!--mobile = #{cm.mobile},-->
+            <!--</if>-->
+            <if test="cm.origin != null and cm.origin != ''">
+                origin = #{cm.origin},
+            </if>
+            <if test="cm.address != null and cm.address != ''">
+                address = #{cm.address}
+            </if>
+        </set>
+
+        WHERE id = #{cm.id}
+    </update>
+
+    <select id="selectMobileAndIdcard" resultType="java.lang.Long">
+        SELECT count(id) FROM gds_member
+        <where>
+            supplier_id = #{id}
+            <if test="cm.idcard == null">
+                AND mobile = #{cm.mobile}
+            </if>
+            <if test="cm.id != null">
+                AND id != #{cm.id}
+            </if>
+            <if test="cm.idcard != null and cm.idcard !=''">
+                AND ( mobile = #{cm.mobile} OR idcard = #{cm.idcard} )
+            </if>
+            AND enable_ = 1
+        </where>
+    </select>
+
+    <select id="selectMobile" resultMap="BaseResultMap">
+        SELECT * FROM gds_member
+        <where>
+            supplier_id = #{supplierId}
+            AND mobile = #{mobile}
+            AND enable_ = 1
+        </where>
+    </select>
+
+    <select id="selectIdcard" resultMap="BaseResultMap">
+        SELECT * FROM gds_member
+        <where>
+            id != #{cm.id}
+            AND supplier_id = #{cm.supplierId}
+            AND idcard = #{cm.idcard}
+            AND enable_ = 1
+        </where>
+    </select>
+
+    <update id="timingUpdate">
+        UPDATE gds_member SET integral = 0 , syn_state = 0
+        WHERE enable_ = 1
+    </update>
+
+    <select id="selectCardNumberCount" resultType="java.lang.Long">
+        SELECT COUNT(1) FROM gds_member
+        WHERE supplier_id = #{id}
+        AND  card_number = #{cardNumber}
+        AND  enable_ = 1
+    </select>
+
+    <select id="queryMemberIsUpdated" resultMap="BaseResultMap">
+        SELECT * FROM gds_member
+        WHERE supplier_id = #{id}
+        AND  syn_state = 0
+        AND  enable_ = 1
+        LIMIT 20
+    </select>
+
+    <update id="updateMemberSynState">
+        UPDATE gds_member SET syn_state = 1
+        <if test="fzId != null and fzId != ''">
+            ,fz_id = #{fzId}
+        </if>
+        WHERE
+        id = #{id}
+        <!--id IN-->
+        <!--<foreach collection="ids" item="data" index="index" open="(" close=")" separator=",">-->
+        <!--#{data}-->
+        <!--</foreach>-->
+
+    </update>
+
+    <select id="findByFzId" resultMap="BaseResultMap">
+        SELECT * FROM gds_member
+        WHERE fz_id = #{fzId}
+    </select>
+</mapper>

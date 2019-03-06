@@ -1,0 +1,761 @@
+/*gds.css*/
+*::-webkit-scrollbar, *::-webkit-scrollbar {
+	display:none;
+}
+.gds-center {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);	
+}
+
+.gds-bg {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+}
+.gds-bg > div {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+.gds-bg img {
+	position: absolute;
+	top: 50%;
+    left: 50%;
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+    transform:translate(-50%,-50%);
+}
+
+*[class*="gds-state-"] {
+	border: solid 1px;
+	border-radius: 10px;
+	padding: 2px 5px;
+	font-size: .8em;
+	margin-right: 5px;
+}
+.gds-state-active {
+	color: #54c6ea;
+	border-color: #54c6ea;
+}
+.gds-state-muted {
+	color: #999999;
+	border-color: #999999;
+}
+
+/*bootstarp*/
+.row {
+	margin-left: 0;
+	margin-right: 0;
+}
+.text-muted {
+	color: #999999;
+}
+
+/*bootstrap-select*/
+.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+	/*width: auto;*/
+}
+.bs-searchbox .form-control {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-color: #82c1e1;
+}
+.dropdown-menu.open .selected a{
+	background-color: #337ab7;
+	color: #fff;
+}
+
+/*字大小*/
+.gds-d5 {
+	font-size: .5em;
+}
+.gds-d8 {
+	font-size: .8em;
+}
+.gds-1d2 {
+	font-size: 1.2em;
+}
+
+/*gds-fg-blue*/
+.gds-fg-blue {
+	color: #54c6ea;
+}
+
+/*登录选择*/
+.user .gds-center {
+	width: 100%;
+	top: 40%;
+}
+.user h2 {
+	text-align: center;
+	color: #fff;
+	font-size: 4.8rem;
+	margin-bottom: 7.5%;
+}
+.user-select {
+	background-color: rgba(255,255,255,.8);
+	padding: 4% 10%;
+}
+.user-select .btn-group {
+	width: 80%;
+}
+.user-select .btn, .user-select .dropdown-menu {
+	font-size: 4.2rem;
+}
+.user-select .dropdown-menu {
+	max-height: 21.2rem;
+	overflow-y: auto;
+}
+.user-select .dropdown-menu > li > a:hover {
+	color: #82c1e1;
+}
+.user-select .btn-group > .btn {
+	-ms-appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+	float: none;
+	width: 100%;
+}
+.user-select .btn-default:hover, .user-select  .btn-default:focus {
+	background-color: #fff;
+}
+.user-select .dropdown-menu {
+	width: 100%;
+}
+.user-btn {
+	float: right;
+	width: 16%;
+	background-color: #82c1e1;
+	border-color: #82c1e1;
+	color: #fff;
+}
+.user-select .user-btn:hover, .user-select .user-btn:focus {
+	background-color: #82c1e1;
+	border-color: #82c1e1;
+	color: #fff;
+}
+.user .dropdown-toggle {
+	position: relative;
+	text-align: left;
+}
+.user .dropdown-toggle:after {
+	position: absolute;
+	content: "";
+	border-top: 16px dashed #076899;
+	border-top: 16px solid\9 #076899;
+	border-right: 16px solid transparent;
+	border-left: 16px solid transparent;
+	right: 3%;
+	top: 50%;
+	margin-top: -8px;
+}
+
+/*gds列表*/
+.gds .container-fluid {
+	padding-left: 0;
+	padding-right: 0;
+}
+.gds-search label {
+	font-size: 1.6rem;
+	color: #1e3d3d;
+	font-weight: 400;
+	letter-spacing: 1px;
+	margin-bottom: 0;
+	vertical-align: middle;
+}
+.gds .form-control {
+	height: auto;
+}
+.list.gds-search {
+	border-bottom: solid 5px #f0f0f0;
+}
+.gds-search, .gds-operation, .gds-panel .panel-heading, .gds-panel .panel-collapse, .gds-container {
+	padding-left: 5%;
+	padding-right: 5%;
+}
+	/*折叠-开始*/
+.gds-panel {
+	border-bottom: solid 1px #f0f0f0;
+}
+.gds-panel .panel-heading .row, .gds-panel .panel-body .row {
+	display: table;
+	width: 100%;
+}
+.gds-panel .panel-title {
+	/*margin-left: -15px;
+	margin-right: -15px;*/
+}
+.gds-panel .panel-collapse {
+	border-top: solid 1px #f0f0f0;
+}
+.gds-panel .panel-body {
+	padding-left: 0;
+	padding-right: 0;
+}
+.gds-panel .panel-body .row {
+	margin-top: 10px;
+}
+.gds-panel .panel-body .row:first-child {
+	margin-top: 0;
+}
+.gds-panel .panel-body .row:hover {
+	color: #54c6ea !important;
+}
+.gds-panel .panel-heading + .panel-collapse > .panel-body {
+	border-top: none;
+}
+.gds-panel a, .gds-panel a:active, .gds-panel a:link, .gds-panel a:visited, .gds-panel a:hover {
+	text-decoration: none;
+}
+.gds-panel .gds-collapse-action {
+	position: relative;
+	color: #1a1a1a;
+	padding-right: 20px;
+}
+.gds-panel .gds-collapse-action[aria-expanded="false"]:after {
+	position: absolute;
+	content: "";
+	border-top: 8px dashed #1a1a1a;
+	border-top: 8px solid\9 #1a1a1a;
+	border-right: 5px solid transparent;
+	border-left: 5px solid transparent;
+	right: 5px;
+	top: 55%;
+	margin-top: -4px;
+}
+.gds-panel .gds-collapse-action[aria-expanded="true"]:after {
+	position: absolute;
+	content: "";
+	border-bottom: 8px dashed #1a1a1a;
+	border-bottom: 8px solid\9 #1a1a1a;
+	border-right: 5px solid transparent;
+	border-left: 5px solid transparent;
+	right: 5px;
+	top: 55%;
+	margin-top: -4px;
+}
+.gds-panel p {
+	margin-bottom: 0;
+}
+.gds-panel .gds-btn-2 {
+	font-size: 16px;
+	padding: 3px 15px;
+}
+.gds-panel .gds-fg-blue {
+	margin-left: 3%;
+	cursor: pointer;
+}
+	/*折叠-结束*/
+.gds-operation {
+	border-bottom: solid 1px #f0f0f0;
+}
+.gds-operation {
+	padding-top: 15px;
+	padding-bottom: 8px;
+}
+.gds-search {
+	padding-top: 25px;
+	padding-bottom: 10px;
+}
+.gds-search .row > * {
+	margin-bottom: 15px;
+}
+.gds-search .row .form-group, .gds-search .row .btn {
+	margin-right: 12px;
+}
+.gds-search .btn, .gds-search .gds-input {
+	font-size: 1.4rem;
+	border: solid 1px #c9c9c9;
+	border-radius: 0;
+}
+.gds-search .gds-input {
+	box-shadow: none;
+}
+.gds-search .bootstrap-select .btn {
+	padding-right: 24px;
+}
+.gds-search .dropdown-menu {
+	border-color: #c9c9c9;
+}
+.gds-search .form-control {
+	border-radius: 0;
+}
+
+.gds .gds-select .gds-input, .gds .gds-select .dropdown-menu {
+	width: 100%;
+}
+.gds .gds-select .btn {
+	-ms-appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+	position: relative;
+	padding-right: 30px;
+	text-align: left;
+}
+.gds .gds-select .btn::after {
+	position: absolute;
+	content: "";
+	border-top: 10px dashed #add6eb;
+	border-top: 10px solid\9 #add6eb;
+	border-right: 7px solid transparent;
+	border-left: 7px solid transparent;
+	right: 5px;
+	top: 50%;
+	margin-top: -5px;
+}
+.gds .dropdown-menu {
+	border-radius: 0;
+	border-color: #fff;
+	background-color: #fafafa;
+}
+.gds .dropdown-menu, .gds input:focus {
+	box-shadow: none;
+}
+.gds-group {
+	display: inline-block;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+
+/*弹窗*/
+.modal-content {
+	box-shadow: none;
+	border-radius: 0;
+	border-color: rgba(130,193,225,.3);
+	border-width: 8px;
+} 
+.modal-body div[class*="col-"] {
+	margin-bottom: 10px;
+}
+.modal-body > .row:last-child > * {
+	margin-bottom: 0;
+}
+.modal-body input {
+	vertical-align: middle;
+}
+.form-inline .form-input-number {
+	width: 80px;
+	margin-right: 5px;
+}
+.modal-body {
+	border-bottom: solid 5px #f5f5f5;
+	display: table;
+	width: 100%;
+}
+.modal-table div[class*="col-"] {
+	display: table-cell;
+	vertical-align: middle;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+.modal-table .form-control {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+.modal-rank {
+	display: block;
+	width: 24px;
+	height: 24px;
+	line-height: 22px;
+	text-align: center;
+	color: #fff;
+	border-radius: 50%;
+	border: solid 1px #82c1e1;
+	background-color: #82c1e1;
+	margin-top: 6px;
+}
+.modal-balance {
+	font-size: 24px;
+	float: left;
+	color: #f0740f;
+}
+.gds .modal-content .form-control, .modal-content .bootstrap-select .btn-default {
+	border-color: #54c6ea;
+	border-radius: 0;
+}
+
+/*表格*/
+.table .table-action {
+	color: #54c6ea;
+	cursor: pointer;
+}
+.table .table-action:hover {
+	text-decoration: none;
+	color: #2589a9;
+}
+.gds-container {
+	padding-top: 25px;
+}
+.gds-table.table td {
+	vertical-align: middle;
+}
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+	border-color: #f0f0f0;
+	color: #1a1a1a;
+	font-weight: 300;
+}
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th {
+	background-color: #f7fafe;
+}
+.tab-content .table {
+	font-size: 12px;
+}
+
+/*分页*/
+.gds .pagination > .active > a, .gds .pagination > .active > span, .gds .pagination > .active > a:hover, .gds .pagination > .active > span:hover, .gds .pagination > .active > a:focus, .gds .pagination > .active > span:focus {
+	background-color: transparent;
+	color: #1a1a1a;
+}
+.pagination > li > a, .pagination > li > span {
+	border: none;
+	margin-left: 1px;
+	margin-right: 1px;
+	color: #54c6ea;
+}
+.pagination > li:first-child > a, .pagination > li:first-child > span, .pagination > li:last-child > a, .pagination > li:last-child > span {
+	border-radius: 0;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.gds-page {
+	color: #54c6ea;
+}
+.gds-page .form-inline {
+	display: inline-block;
+}
+.gds-page * {
+	vertical-align: middle;
+}
+.gds-page .gds-btn {
+	border: solid 1px #54c6ea;
+	border-radius: 0;
+	background-color: #fff;
+	color: #54c6ea;
+	padding: 6px 12px;
+}
+.gds-page .gds-page-input {
+	width: 54px;
+	color: #1a1a1a;
+	text-align: center;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/*搜索折叠*/
+div[class*="flex"].gds-search{
+	position: relative;
+}
+.gds-search.flex {
+	border-bottom: solid 2px #54c6ea;
+}
+.gds-search.flex-2 {
+	border-bottom: solid 2px #f0f0f0;
+}
+.serach-flex {
+	position: absolute;
+	display: inline-block;
+	left: 50%;
+	bottom: 0;
+	transform: translate(-50%,50%);
+	padding-left: 12px;
+	padding-right: 12px;
+	background-color: #fff;
+	color: #54c6ea;
+	cursor: pointer;
+}
+.serach-flex:after {
+	content: "更多条件";
+	padding-right: 18px;
+	background: url(../images/arrow-up.png) no-repeat scroll center right/ 12px 10px;
+}
+.collapsed.serach-flex:after {
+	content: "更多条件";
+	padding-right: 18px;
+	background: url(../images/arrow-down.png) no-repeat scroll center right/ 12px 10px;
+}
+.gds-search-more {
+	color: #54C6EA;
+	cursor: pointer;
+}
+.gds-search-more:after {
+	content: "<<收起";
+}
+.collapsed.gds-search-more:after {
+	content: "更多>>";
+}
+
+/*筛选条件*/
+.gds-condition {
+	overflow: hidden;
+	padding-bottom: 15px;
+}
+.gds-condition > .label {
+	color: #000000;
+	font-size: 14px;
+	font-weight: 100;
+	vertical-align: top;
+	margin-top: 3px;
+	margin-bottom: .5em;
+	float: left;
+}
+.gds-condition > .form-tags {
+	display: inline-block;
+	overflow: visible;
+	width: 90%;
+	height: auto;
+}
+.gds-container .tags-input {
+	display: none;
+}
+.gds-condition .btn-info {
+	display: inline;
+}
+.bootstrap-tags .tag {
+	margin: 0 .5em .5em 0;
+	font-weight: 100;
+}
+
+/*按钮*/
+.gds-btn-1 {
+	background-color: #54c6ea !important;
+	border-color: #54c6ea !important;
+	color: #fff !important;
+}
+.gds-btn-2 {
+	background-color: #fff !important;
+	border-color: #54c6ea !important;
+	color: #54c6ea !important;
+}
+.gds-search .gds-btn-1 {
+	font-size: 18px;
+	padding: 3px 27px;
+	border-radius: 4px;	
+}
+.gds-search .gds-btn-1:hover, .gds-search .gds-btn-1.active {
+	background-color: #54c6ea;
+	border-color: #54c6ea;
+	color: #fff;
+}
+.gds-operation .gds-btn-1 {
+	font-size: 16px;
+	border-radius: 0;
+}
+
+/*选项卡*/
+.nav-tabs {
+	white-space:nowrap;
+	overflow: hidden;
+}
+.nav-tabs > li > a {
+	border-radius: 0;
+	border-color: #54c6ea;
+	margin-right: 0;
+	border-left: none;
+	color: #000;
+}
+.nav-tabs > li:first-child > a {
+	border-left: solid 1px #54c6ea;
+}
+.nav-tabs > li:first-child > a:hover {
+	border-left-color: #eee;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+	border-color: #54c6ea;
+	background-color: #54c6ea;
+	color: #fff;
+}
+
+/*门票验证*/
+.gds-state-btn {
+	border-radius: 4px !important;
+	color: #828fe1;
+	background-color: #fff;
+	font-size: 1.4rem;
+}
+.gds-search .row .gds-state-btn {
+	margin-right: 30px;
+	border-color: #828fe1;
+}
+.gds-state-btn:hover, .gds-state-btn:focus, .gds-state-btn.focus {
+	background-color: #828fe1;
+	color: #fff;
+}
+.gds-validate {
+	padding: 2% 20%;
+	border-bottom: solid 5px #f0f0f0;
+}
+.gds-validate .form-control, .gds-validate .btn {
+	border-radius: 0;
+	box-shadow: none;
+	border-color: #54c6ea;
+	height: 60px;
+	line-height: 58px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.gds-validate input.form-control {
+	font-size: 20px;
+}
+.gds-validate .btn {
+	background-color: #54c6ea;
+	color: #fff;
+	font-size: 36px;
+	font-weight: 700;
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+/*小于1024px*/
+@media only screen and (max-width: 1024px) {
+	.user h2 {
+		font-size: 3.2rem;
+	}
+	.user-select .btn, .user-select .dropdown-menu {
+		font-size: 2.4rem;
+	}
+	.user-select .dropdown-menu {
+		max-height: 13.2rem;
+	}
+	.user .dropdown-toggle:after {
+		border-width: 8px;
+		margin-top: -4px;
+	}
+	.user-select .btn-group {
+		width: 75%;
+	}
+	.user-btn {
+		width: auto;
+	}
+}
+
+/*大于767px*/
+@media only screen and (min-width: 767px) {
+	.gds-panel *[class^="col-"] {
+		padding-left: 0;
+		padding-right: 15px;
+		display: table-cell;
+		vertical-align: middle;
+		float: none;
+	}
+}
+
+/*bootstrap手机端分界线 766px以下*/
+@media only screen and (max-width: 767px) {
+	.gds-search {
+		padding-left: 30px;
+	}
+	.gds-search, .gds-operation, .gds-panel .panel-heading, .gds-panel .panel-body, .gds-container {
+		padding-left: 25px;
+		padding-right: 25px;
+	}
+	.gds-search .row > .gds-group {
+		margin-bottom: 0;
+	}
+	.gds-panel *[class^="col-"] {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	.form-input-number {
+		display: inline-block;
+	}
+}
+
+/*小于640px*/
+@media only screen and (max-width: 640px) {
+	.user h2 {
+		font-size: 2.4rem;
+	}
+	.user-select .btn, .user-select .dropdown-menu {
+		font-size: 1.2rem;
+	}
+	.user-select .dropdown-menu {
+		max-height: 10.1rem;
+	}
+	.user .dropdown-toggle:after {
+		border-width: 4px;
+		margin-top: -2px;
+	}
+}
+
+
+/*动画*/
+@keyframes arrow
+{
+	from {
+		transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-webkit-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+	}
+}
+
+@-moz-keyframes arrow /* Firefox */
+{
+	from {
+		transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-webkit-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+	}
+}
+
+@-webkit-keyframes arrow /* Safari 和 Chrome */
+{
+	from {
+		transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-webkit-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+	}
+}
+
+@-o-keyframes arrow /* Opera */
+{
+	from {
+		transform: rotate(0deg);
+		-ms-transform: rotate(0deg);
+		-moz-transform: rotate(0deg);
+		-webkit-transform: rotate(0deg);
+		-o-transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(180deg);
+		-ms-transform: rotate(180deg);
+		-moz-transform: rotate(180deg);
+		-webkit-transform: rotate(180deg);
+		-o-transform: rotate(180deg);
+	}
+}

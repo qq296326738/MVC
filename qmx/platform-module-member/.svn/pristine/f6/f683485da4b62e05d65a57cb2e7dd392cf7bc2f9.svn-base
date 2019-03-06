@@ -1,0 +1,566 @@
+package com.qmx.member.front.controller.member;
+
+import com.alibaba.fastjson.JSONObject;
+import com.qmx.appextend.remoreapisub.SysPayOrderClient;
+import com.qmx.base.api.exception.BusinessException;
+import com.qmx.base.core.qrcode.QRCodeUtil;
+import com.qmx.base.core.utils.Base64Util;
+import com.qmx.coreservice.constant.PayConstant;
+import com.qmx.coreservice.dto.pay.SysPayOrderDto;
+import com.qmx.coreservice.dto.pay.SysPayRequestDTO;
+import com.qmx.coreservice.enumerate.TradingTypeEnum;
+import com.qmx.member.enumerate.GiveType;
+import com.qmx.member.enumerate.RechargeType;
+import com.qmx.member.enumerate.RuleType;
+import com.qmx.member.front.utils.WeiXinUtil;
+import com.qmx.member.model.*;
+import com.qmx.member.service.*;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.Assert;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Controller
+@RequestMapping("/member")
+public class MemberMoneyController {
+    private static Logger logger = LoggerFactory.getLogger(MemberMoneyController.class);
+
+    @Value("${com.qmx.front.siteUrl:http://192.168.3.6:9021/}")
+    private String webUrl;
+    @Autowired
+    private GdsMemberMoneyService gdsMemberMoneyService;
+    @Autowired
+    private GdsMemberService gdsMemberService;
+    @Autowired
+    private GdsMemberRechargeRuleService gdsMemberRechargeRuleService;
+    @Autowired
+    private SysPayOrderClient sysPayOrderService;
+    @Autowired
+    private GdsMemberDiscountService gdsMemberDiscountService;
+    @Autowired
+    private GdsMemberConsumptionService gdsMemberConsumptionService;
+    @Value("${com.qmx.pay.notify.mchSecurityKey}")
+    private String mchSecurityKey;
+
+    /**
+     * 历史总充值(消费)金额
+     *
+     * @param id
+     * @param money
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/balance")
+    public String balance(Long id, Double money, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        Map<String, Double> doubleMap = gdsMemberMoneyService.generalRecord(id);
+        if (doubleMap != null) {
+            Double recharge = doubleMap.get("recharge");
+            Double consumption = doubleMap.get("consumption");
+            model.addAttribute("recharge", recharge);
+            model.addAttribute("consumption", consumption);
+        }
+        model.addAttribute("id", id);
+        model.addAttribute("money", money);
+
+        return "member/memberMoney/balance";
+    }
+
+    /**
+     * 我的充值
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/recharge")
+    public String recharge(Long id, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        model.addAttribute("id", id);
+        return "member/memberMoney/recharge";
+    }
+
+    /**
+     * 输入价格计算充值优惠
+     *
+     * @param id
+     * @param money
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/calculatingPrice")
+    public JSONObject calculatingPrice(Long id, Double money) {
+        Assert.notNull(id, "用户id不能为空");
+        GdsMember gdsMember = gdsMemberService.find(id);
+        //获得等级id去寻找充值优惠规则
+        List<GdsMemberRechargeRule> list = gdsMemberRechargeRuleService.findByLevelId(gdsMember.getLevelId());
+        JSONObject json = calculatingPriceUtil(list, money);
+        return json;
+    }
+
+
+    /**
+     * 我的充值->确认充值
+     *
+     * @param id          会员id
+     * @param moeny       充值金额
+     * @param actualMoney 实际充值金额
+     * @return 充值页面
+     */
+    @RequestMapping(value = "/pay")
+    public String pay(Long id, Double moeny, Double actualMoney, ModelMap modelMap, String openId, HttpServletRequest request) {
+        Assert.notNull(id, "会员id异常");
+        Assert.notNull(moeny, "充值金额异常");
+        GdsMember gdsMember = gdsMemberService.find(id);
+        if (gdsMember != null && StringUtils.isEmpty(gdsMember.getFzId())) {
+//            throw new BusinessException("会员信息暂未同步,请稍后再试");
+            modelMap.addAttribute("msg", "会员信息暂未同步,请稍后再试");
+            return "common/error";
+        }
+        String header = request.getHeader("user-agent");
+        String type;
+        if (isMobileDevice(header)) {
+            //手机端
+            if (WeiXinUtil.isWeiXin(request)) {
+                //微信端
+                type = "YDWX";
+//                WxAuthorization wxAuthorizationDto = wxAuthorizationService.findByMId(gdsMember.getSupplierId());
+//                if (wxAuthorizationDto == null) {
+//                    modelMap.addAttribute("msg", "当前供应商没配置微信账号");
+//                    return "error";
+//                }
+//                if (StringUtils.isEmpty(openId)) {
+//                    return "redirect:" + wxAuthorizationService.getRedirectUri(wxAuthorizationDto.getAuthorizerAppid(),
+//                            webUrl + "member/pay?id=" + id + "&moeny=" + moeny + "&actualMoney=" + actualMoney);
+//                }
+//                modelMap.addAttribute("openId", openId);
+            } else {
+                //手机wap端
+                type = "YDWAP";
+            }
+        } else {
+            //PC端
+            type = "PC";
+        }
+        modelMap.addAttribute("type", type);
+        modelMap.addAttribute("id", id);
+        modelMap.addAttribute("moeny", moeny);
+        modelMap.addAttribute("actualMoney", actualMoney);
+        return "member/memberMoney/pay";
+    }
+
+    /**
+     * 我的充值->确认充值->充值中
+     *
+     * @param id          会员id
+     * @param moeny       充值金额
+     * @param actualMoney 实际充值金额
+     * @param type        充值方式
+     * @param model
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/payorder")
+    public Map payorder(Long id, Double moeny, Double actualMoney, String type, HttpServletRequest request, ModelMap model) {
+        Assert.notNull(id, "会员id不能为空");
+        Assert.notNull(moeny, "充值金额不能为空");
+        Assert.notNull(actualMoney, "实际充值金额不能为空");
+        Assert.notNull(type, "充值类型不能为空");
+        Map<String, Object> result = new HashMap<>();
+        try {
+            SysPayRequestDTO payDTO = new SysPayRequestDTO();
+            GdsMember gdsMember = gdsMemberService.find(id);
+            if (gdsMember == null) {
+                throw new BusinessException("会员信息异常");
+            }
+            //创建金额记录
+            GdsMemberMoney money = new GdsMemberMoney();
+            money.setMemberId(id);
+            money.setFzId(gdsMember.getFzId());   //同步线下会员才有fzId
+            money.setSupplierId(gdsMember.getSupplierId());
+            String sn = RandomStringUtils.randomAlphanumeric(20);
+            money.setSn(sn);
+            money.setSnText("会员充值");
+            money.setTime(new Date());
+            money.setRecordType(true);
+            money.setStatus(false);
+            money.setSynState(false);
+            if ("PCZFB".equals(type) || "YDZFB".equals(type)) {
+                money.setRechargeType(RechargeType.zfb);
+            } else {
+                money.setRechargeType(RechargeType.wx);
+            }
+            //重新计算一下价格,判断,防止恶意修改数据
+            List<GdsMemberRechargeRule> list = gdsMemberRechargeRuleService.findByLevelId(gdsMember.getLevelId());
+            JSONObject json = calculatingPriceUtil(list, moeny);
+            //赠送积分
+            Integer integer = Integer.valueOf(json.get("integralPoint").toString());
+            Double isActualMoney;
+            //(赠送金额)
+            Double mneyPoint = null;
+            if (json.get("type").toString().equals(GiveType.zengsong.name())) {
+                isActualMoney = moeny;
+                mneyPoint = Double.valueOf(json.get("mneyPoint").toString());
+                //赠送金额,如果是折扣,直接用充值金额减去实际金额
+                money.setDonationMoney(mneyPoint);
+            } else {
+                isActualMoney = Double.valueOf(json.get("discountPoint").toString());
+            }
+            if (!isActualMoney.equals(actualMoney)) {
+                throw new BusinessException("充值金额有异常,请重新充值");
+            }
+            money.setMoney(moeny);
+            money.setActualMoney(actualMoney);
+            money.setIntegral(integer);
+            GdsMemberMoney save = gdsMemberMoneyService.save(money);
+            result.put("moneyId", save.getId());
+            result.put("money", actualMoney);
+            //开始设置并判断平台支付方式
+            //支付金额
+            payDTO.setAmount(BigDecimal.valueOf(actualMoney));
+            //商品描述信息
+            payDTO.setBody("会员充值");
+            //商户ID
+            payDTO.setMchId(gdsMember.getSupplierId());
+            //商户订单号
+            payDTO.setMchOrderId(save.getId().toString());
+            //商品标题
+            payDTO.setSubject("会员充值");
+            //充值类型
+            payDTO.setTradingType(TradingTypeEnum.OTHER);
+//            String url1 = "member/payNotify?moneyId=" + 1027356719172730881L;
+            String url1 = "/member/payNotify";
+            //通知地址
+            payDTO.setNotifyUrl(webUrl + url1);
+            if (type.startsWith("YD")) {
+                if ("YDZFB".equals(type)) {
+                    payDTO.setChannelNo(PayConstant.PAY_CHANNEL_ALIPAY_WAP);
+                    //回调地址
+                    payDTO.setReturnUrl(webUrl + "/member/paySuccess?moneyId=" + save.getId());
+                    result.put("paytype", "zfb");
+                } else if ("YDWX".equals(type)) {
+                    payDTO.setChannelNo(PayConstant.PAY_CHANNEL_WX_JSAPI);
+                    payDTO.setOpenId(gdsMember.getOpenid());
+                    result.put("paytype", "wxjsp");
+                }
+                payDTO.setTradingScene("会员移动端充值");
+                result.put("platformType", "wx");
+            } else {
+                if ("PCZFB".equals(type)) {
+                    payDTO.setChannelNo(PayConstant.PAY_CHANNEL_ALIPAY_QR);
+                } else if ("PCWX".equals(type)) {
+                    payDTO.setChannelNo(PayConstant.PAY_CHANNEL_WX_NATIVE);
+                }
+//              productId微信扫码支付必填
+                payDTO.setProductId(save.getId().toString());
+                payDTO.setTradingScene("会员PC端充值");
+                result.put("platformType", "pc");
+            }
+            SysPayOrderDto sysPayOrderDto = sysPayOrderService.payOrder(payDTO);
+            result.putAll(sysPayOrderDto.getPayResult());
+            if (!WeiXinUtil.isWeiXin(request)) {
+                //二维码
+                Map<String, Object> image = sysPayOrderDto.getPayResult();
+                if (image != null) {
+                    String codeUrl = (String) image.get("codeUrl");
+                    if (codeUrl != null) {
+                        ByteArrayOutputStream out = new ByteArrayOutputStream();
+                        QRCodeUtil.encode(codeUrl, 220, 220, out);
+                        byte[] tempbyte = out.toByteArray();
+                        String base64Url = Base64Util.encodeToString(tempbyte);
+                        result.put("codeUrl", "data:image/png;base64," + base64Url);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            result.put("msg", "支付失败");
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+
+    /**
+     * 支付通知地址(测试)
+     *
+     * @param moneyId 金额记录id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/payNotifyTest")
+    public String payNotifyTest(Long moneyId) {
+        Assert.notNull(moneyId, "金额记录id不存在");
+        Boolean recharge = gdsMemberMoneyService.createRecharge(moneyId);
+        if (recharge) {
+            return "success";
+        }
+        return "fail";
+    }
+
+    /**
+     * 支付通知地址
+     *
+     * @param body
+     * @param sign
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping("/payNotify")
+    public String payNotify(@RequestParam("body") String body,
+                            @RequestParam("sign") String sign) throws Exception {
+        logger.info("支付通知:body:{},sign{}", body, sign);
+        String reqSign = DigestUtils.md5Hex(body + mchSecurityKey);
+        if (!reqSign.equals(sign)) {
+            throw new Exception("签名验证失败");
+        }
+        JSONObject jsonObject = JSONObject.parseObject(body);
+        Long moneyId = jsonObject.getLong("mchOrderId");
+        if (moneyId == null) {
+            moneyId = jsonObject.getLong("productId");
+        }
+        Boolean recharge = gdsMemberMoneyService.createRecharge(moneyId);
+        if (recharge) {
+            return "success";
+        }
+        return "fail";
+    }
+
+    /**
+     * 循环判断是否支付成功(查看订单状态)
+     *
+     * @param id 金额记录id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/selectPayorderStatus")
+    public Boolean selectPayorderStatus(Long id) {
+        GdsMemberMoney memberMoney = gdsMemberMoneyService.find(id);
+        Boolean status = memberMoney.getStatus();
+        return status;
+    }
+
+
+    /**
+     * 支付后回调地址
+     *
+     * @param moneyId 金额记录id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/paySuccess")
+    public String paySuccess(Long moneyId, ModelMap model) {
+        Assert.notNull(moneyId, "金额记录异常");
+        GdsMemberMoney money = gdsMemberMoneyService.find(moneyId);
+        model.addAttribute("data", money);
+        if (money.getStatus()) {
+            return "member/memberMoney/paySuccess";
+        } else {
+            return "member/memberMoney/payFail";
+        }
+    }
+
+    /**
+     * 我的充值->充值记录
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/rechargeList")
+    public String rechargeList(Long id, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        Map<String, List<GdsMemberMoney>> list = gdsMemberMoneyService.getMemberMoneyList(id, true);
+        model.addAttribute("id", id);
+        model.addAttribute("map", list);
+        return "member/memberMoney/rechargeList";
+    }
+
+    /**
+     * 消费记录
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/consumeList")
+    public String consumeList(Long id, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        Map<String, List<GdsMemberMoney>> list = gdsMemberMoneyService.getMemberMoneyList(id, false);
+        model.addAttribute("list", list);
+        return "member/memberMoney/consumeList";
+    }
+
+    /**
+     * 消费记录--消费记录详情
+     *
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = {"consumeDetails", "rechargeMoneyDetails"})
+    public String consumeDetails(Long id, String url, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        GdsMemberMoney gdsMemberMoney = gdsMemberMoneyService.find(id);
+        model.addAttribute("data", gdsMemberMoney);
+        return "member/memberMoney/" + url;
+    }
+
+    /**
+     * 扫码支付
+     *
+     * @param id    会员id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/qRcode")
+    public String qRcode(Long id, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        GdsMember member = gdsMemberService.find(id);
+        model.addAttribute("data", member);
+        model.addAttribute("id", id);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+//        String codeUrl = webUrl + "member/qRcodeConsumption?id=" + id;
+        String cardNo = member.getCardNo();
+        if (StringUtils.isEmpty(cardNo)) {
+            model.addAttribute("msg", "会员信息暂未同步,请稍后再试");
+            return "common/error";
+        }
+        QRCodeUtil.encode(cardNo, 440, 440, out);
+        byte[] tempbyte = out.toByteArray();
+        String base64Url = Base64Util.encodeToString(tempbyte);
+        model.addAttribute("codeUrl", "data:image/png;base64," + base64Url);
+        return "member/memberMoney/qRcode";
+    }
+
+    /**
+     * 扫码支付,根据会员id对应等级的优惠规则,消费规则计算支付金额
+     *
+     * @param id  会员id
+     * @param pid 商品id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/qRcodeDiscountByMemberid")
+    public GdsMemberDiscount qRcodeDiscountByMemberid(Long id, Long pid) {
+        Assert.notNull(id, "用户id不能为空");
+        Assert.notNull(pid, "商品id不能为空");
+        GdsMember model = gdsMemberService.find(id);
+        GdsMemberDiscount discount = gdsMemberDiscountService.findByIdAndPid(model, pid);
+        return discount;
+    }
+
+    /**
+     * 扫码支付,根据会员id对应等级的消费规则,消费规则计算赠送积分
+     *
+     * @param id  会员id
+     * @param pid 商品id
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/qRcodeConsumptionByMemberid")
+    public GdsMemberConsumption qRcodeConsumptionByMemberid(Long id, Long pid) {
+        Assert.notNull(id, "用户id不能为空");
+        Assert.notNull(pid, "商品id不能为空");
+        GdsMember model = gdsMemberService.find(id);
+        GdsMemberConsumption consumption = gdsMemberConsumptionService.findByIdAndPid(model, pid);
+        return consumption;
+    }
+
+
+    /**
+     * 判断是pc端还是移动端
+     *
+     * @param requestHeader
+     * @return 返回true，代表来自移动端，返回false代表pc端
+     */
+    public boolean isMobileDevice(String requestHeader) {
+        /**
+         * android : 所有android设备
+         * mac os : iphone ipad
+         * windows phone:Nokia等windows系统的手机
+         */
+        String[] deviceArray = new String[]{"android", "mac os", "windows phone"};
+        if (requestHeader == null)
+            return false;
+        requestHeader = requestHeader.toLowerCase();
+        for (int i = 0; i < deviceArray.length; i++) {
+            if (requestHeader.indexOf(deviceArray[i]) > 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //判断优惠价格
+    public JSONObject calculatingPriceUtil(List<GdsMemberRechargeRule> list, Double money) {
+        JSONObject json = new JSONObject();
+        if (list == null) {
+        } else {
+            double mneyPoint = 0;
+            double discountPoint = 0;
+            double integralPoint = 0;
+            for (GdsMemberRechargeRule rule : list) {
+                if (rule.getType() == RuleType.fixed) {
+                    if (money.equals(rule.getAmount())) {
+                        if (rule.getGive() == GiveType.zengsong) {
+                            //赠送金额
+                            mneyPoint = money * rule.getMoneyPoint();
+                        }
+                        if (rule.getGive() == GiveType.zhekou) {
+                            //折扣后金额
+                            discountPoint = money * rule.getDiscountPoint();
+                        }
+                        json.put("type", rule.getGive().name());
+                        //赠送积分
+                        integralPoint = money * rule.getIntegralPoint();
+                        json.put("code", "200");
+                    }
+                } else if (rule.getType() == RuleType.section) {
+                    if (rule.getMinAmount() <= money && money < rule.getMaxAmount()) {
+                        if (rule.getGive() == GiveType.zengsong) {
+                            //赠送金额
+                            mneyPoint = money * rule.getMoneyPoint();
+                        }
+                        if (rule.getGive() == GiveType.zhekou) {
+                            //折扣后金额
+                            discountPoint = money * rule.getDiscountPoint();
+                        }
+                        json.put("type", rule.getGive().name());
+                        //赠送积分
+                        integralPoint = money * rule.getIntegralPoint();
+                        json.put("code", "200");
+                    }
+                }
+                json.put("mneyPoint", (double) Math.round(mneyPoint * 100) / 100);
+                json.put("discountPoint", (double) Math.round(discountPoint * 100) / 100);
+                json.put("integralPoint", Math.round(integralPoint));
+                if (json.get("code") != null) {
+                    return json;
+                }
+            }
+        }
+        json.put("code", "400");
+        json.put("msg", "请输入正确的充值金额,如有疑问,请联系客服");
+        return json;
+    }
+
+}
+

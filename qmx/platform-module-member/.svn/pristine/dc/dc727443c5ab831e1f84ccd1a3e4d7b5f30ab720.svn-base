@@ -1,0 +1,56 @@
+package com.qmx.member.service;
+
+import com.qmx.base.api.annotation.GdsCacheConfig;
+import com.qmx.base.core.base.BaseService;
+import com.qmx.member.mapper.GdsInviteMapper;
+import com.qmx.member.model.GdsInvite;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ * 分享二维码关注
+ */
+@Service
+@GdsCacheConfig(cacheNS = "GDS-MEMBER", cacheName = "GdsInviteService")
+public class GdsInviteService extends BaseService<GdsInvite> {
+
+    @Autowired
+    private GdsInviteMapper mapper;
+    @Autowired
+    private GdsMemberIntegeralService integeralService;
+
+    /**
+     * 查询该微信用户是否关注过订阅号
+     * 关注时调用此方法查询该用户是否关注过,防止重复关注刷积分
+     * 返回true,调用本类findByUserIdAndOpenId()方法获得赠送积分,
+     * 在调用createCodeInvite()方法创建积分记录
+     * 否则,直接跳过
+     *
+     * @param userId 邀请人id
+     * @param openId openId
+     */
+    @Transactional
+    public void findByOpenIdSetCodeInvite(Long userId, String openId) {
+        //判断该用户是否关注过 等于0代表没有关注过
+        if (mapper.findByOpenId(openId) == 0) {
+            GdsInvite invite = this.findByUserIdAndOpenId(userId, openId);
+            integeralService.createCodeInvite(userId, invite.getCodeIntegral());
+            invite.setState(true);
+            this.update(invite);
+        }
+    }
+
+    /**
+     * 查询邀请人与被邀人的记录
+     *
+     * @param userId 邀请人id
+     * @param openId 被邀人openid
+     * @return 邀请记录
+     */
+    public GdsInvite findByUserIdAndOpenId(Long userId, String openId) {
+        return mapper.findByUserIdAndOpenId(userId, openId);
+    }
+
+
+}

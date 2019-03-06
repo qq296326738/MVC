@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <title></title>
+    <script src="${base}/member/js/mui.min.js"></script>
+    <script src="${base}/member/js/jquery-3.2.0.min.js"></script>
+    <link href="${base}/member/css/mui.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="${base}/member/font-awesome-4.7.0/css/font-awesome.min.css"/>
+    <link rel="stylesheet" type="text/css" href="${base}/member/css/member.css"/>
+    <script type="text/javascript" charset="utf-8">
+        mui.init();
+    </script>
+    <style>
+        html, body, .member {
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="exchange-address">
+<div class="member">
+    <div class="mui-content">
+        <div class="member-shop-explain member-flex">
+            <div class="member-explain-img">
+                <img src="${data.image!}"/>
+            </div>
+            <div class="member-explain-text">
+                <h4>兑换说明：</h4>
+                <p>${data.text!}</p>
+            </div>
+        </div>
+        <div class="member-part">
+            <div class="member-flex member-row">
+                <div class="member-part-label">
+                    <p>数量：</p>
+                </div>
+                <div class="member-flex-main">
+                    <input id="integal" type="hidden" value="${data.integeral!}"/>
+                    <div class="member-number-picker">
+                        <em class="fa fa-minus wshop-button-4"></em>
+                        <input id="number" type="number" class="member-number-input" value="1"/>
+                        <em class="fa fa-plus wshop-button-4"></em>
+                    </div>
+                </div>
+            </div>
+            <div class="member-flex member-row member-border-none">
+                <div class="member-part-label">
+                    <p>积分消耗：</p>
+                </div>
+                <div class="member-flex-main">
+                    <p id="balance">${data.integeral!}积分</p>
+                </div>
+            </div>
+        </div>
+        <div class="member-part">
+            <div class="member-flex member-row">
+                <div class="member-part-label">
+                    <p>收货人：</p>
+                </div>
+                <input id="name" type="text" placeholder="姓名"/>
+            </div>
+            <div class="member-flex member-row">
+                <div class="member-part-label">
+                    <p>手机号：</p>
+                </div>
+                <input id="mobile" type="text" placeholder="手机号"/>
+            </div>
+            <div class="member-flex member-row">
+                <div class="member-part-label">
+                    <p>所在地区：</p>
+                </div>
+                <input id="area" type="text" placeholder="所在省(市)"/>
+            </div>
+            <div class="member-flex member-row member">
+                <div class="member-part-label">
+                    <p>详情地址：</p>
+                </div>
+                <input id="address" type="text" placeholder="详细(区)街道名"/>
+            </div>
+        </div>
+        <a id="submit" href="####" class="member-btn-3">确认兑换</a>
+    </div>
+</div>
+<script>
+
+    $("#submit").click(function () {
+        var count = $("#number").val();
+        var integeral = $("#balance").text().substring(0, $("#balance").text().length - 2);
+        var name = $("#name").val();
+        var mobile = $("#mobile").val();
+        var area = $("#area").val();
+        var address = $("#address").val();
+        var countI = count * ${data.integeral!};
+        if (integeral != countI) {
+            alert("数据有误,请刷新重试");
+            return false;
+        }
+        if (name == "" || mobile == "" || area == "" || address == "") {
+            alert("请信息填写完整,才能准确的发货哟!!!");
+            return false;
+        }
+        if (!/^1\d{10}$/.test(mobile)) {
+            alert("请输入正确的手机号")
+            return false;
+        }
+        var vr = window.confirm('你确定要交易吗？');
+        if (vr) {
+            window.location.href = "toExchangeSuccess?memberId=${userId!}" + "&count=" + count + "&integral=" + integeral +
+                    "&name=" + name + "&mobile=" + mobile + "&area=" + area + "&address=" + address + "&exchangeId=${data.id!}" + "&snText=${data.text!}";
+        } else {
+            return false;
+        }
+    <#--$.post(-->
+    <#--"exchangeSuccess",-->
+    <#--{-->
+    <#--exchangeId: "${data.id!}",-->
+    <#--memberId: "${userId!}",-->
+    <#--productName: "${data.productName}",-->
+    <#--count:number,-->
+    <#--integeral:integeral,-->
+    <#--name:name,-->
+    <#--mobile:mobile,-->
+    <#--area:area,-->
+    <#--address:address-->
+    <#--},-->
+    <#--function (data) {-->
+    <#--alert("asdasd")-->
+    <#--},-->
+    <#--"json"-->
+    <#--)-->
+    })
+
+    /*刷新价格*/
+    function priceSum() {
+        var o = $('.member-number-input');
+        var num = parseInt(o.attr('value'));
+        var integal = parseInt($('#integal').attr('value'));
+        integal = num * integal;
+
+        $('#balance').text(integal + '积分');
+    }
+
+    $('.member-number-input').on('input propertychange', function () {
+        var val = parseInt($(this).val()) ? $(this).val() : 1;
+        $(this).attr('value', val);
+        priceSum();
+    });
+
+    /*数量*/
+    $('.fa-minus').on('tap', function () {
+        var o = $('.member-number-input');
+        var num = parseInt(o.attr('value'));
+        num = (num > 1) ? num - 1 : 1;
+        o.attr('value', num);
+        o.val(num);
+        priceSum();
+    });
+    $('.fa-plus').on('tap', function () {
+        var o = $('.member-number-input');
+        var num = parseInt(o.attr('value'));
+        num = num + 1;
+        o.attr('value', num);
+        o.val(num);
+        priceSum();
+    });
+</script>
+</body>
+</html>

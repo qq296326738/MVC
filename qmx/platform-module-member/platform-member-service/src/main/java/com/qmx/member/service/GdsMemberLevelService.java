@@ -1,0 +1,185 @@
+package com.qmx.member.service;
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.qmx.base.api.annotation.GdsCacheConfig;
+import com.qmx.base.api.dto.PageDto;
+import com.qmx.base.api.dto.RestResponse;
+import com.qmx.base.api.enumerate.SysUserType;
+import com.qmx.base.core.base.BaseService;
+import com.qmx.base.core.utils.InstanceUtil;
+import com.qmx.coreservice.model.SysUser;
+import com.qmx.member.mapper.GdsMemberLevelMapper;
+import com.qmx.member.model.GdsMemberLevel;
+import com.qmx.member.query.GdsMemberLevelVO;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.Assert;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 会员等级
+ */
+@Service
+@GdsCacheConfig(cacheNS = "GDS-MEMBER", cacheName = "GdsMemberLevel")
+public class GdsMemberLevelService extends BaseService<GdsMemberLevel> {
+
+    @Autowired
+    private GdsMemberLevelMapper gdsMemberLevelMapper;
+    @Autowired
+    private GdsMemberRechargeRuleService rechargeRuleService;
+    @Autowired
+    private GdsMemberConsumptionService consumptionService;
+    @Autowired
+    private GdsMemberDiscountService discountService;
+
+
+    public RestResponse<List<GdsMemberLevel>> findLevelAll(SysUser currentUser) {
+        try {
+            List<GdsMemberLevel> all = gdsMemberLevelMapper.findLevelAll(currentUser);
+            return RestResponse.ok(all);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResponse.fail("获得等级失败");
+        }
+    }
+
+    public List<GdsMemberLevel> findByName(SysUser currentUser, String levelName) {
+        return gdsMemberLevelMapper.findByName(currentUser, levelName);
+    }
+
+    @Transactional(rollbackFor = Throwable.class)
+    public void delAll(Long id, Long aLong) {
+        this.del(id, aLong);
+        gdsMemberLevelMapper.delUpgradeId(id);
+        rechargeRuleService.delByLevenId(id);
+        consumptionService.delByLevenId(id);
+        discountService.delByLevenId(id);
+
+    }
+
+    public PageDto<GdsMemberLevel> findList(SysUser userDto, GdsMemberLevelVO dto) {
+        Map<String, Object> params = InstanceUtil.transBean2StringMap(dto);
+        if (userDto.getUserType() == SysUserType.admin) {
+
+        } else if (userDto.getUserType() == SysUserType.supplier) {
+            params.put("supplierId", userDto.getId());
+        } else {
+            return new PageDto<>();
+        }
+        Page<GdsMemberLevel> page = this.query(params);
+        PageDto<GdsMemberLevel> pageDto = new PageDto<>(page.getTotal(), page.getSize(), page.getCurrent(), page.getRecords());
+        return pageDto;
+    }
+
+    @Transactional
+    public RestResponse<GdsMemberLevel> createDto(SysUser currentUser, GdsMemberLevelVO vo) {
+        try {
+            Assert.notNull(vo, "数据不能为空");
+            List<GdsMemberLevel> memberLevel = gdsMemberLevelMapper.findByName(currentUser, vo.getName());
+            if (memberLevel != null && memberLevel.size() != 0) {
+                return RestResponse.fail("重复的等级");
+            }
+            if (!vo.getLevelLock()) {
+                vo.setUpgradeId(null);
+                vo.setIntegral(0L);
+            }
+            if (vo.getUpgradeId() == null) {
+                vo.setLevelLock(false);
+                vo.setIntegral(0L);
+            }
+            GdsMemberLevel model = new GdsMemberLevel();
+            BeanUtils.copyProperties(vo, model);
+            model.setCreateBy(currentUser.getId());
+            model.setUpdateBy(currentUser.getId());
+            model.setSupplierId(currentUser.getId());
+            model = this.save(model);
+            return RestResponse.ok(model);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResponse.fail("新增等级失败");
+        }
+    }
+
+    @Transactional
+    public RestResponse<GdsMemberLevel> updateDto(SysUser currentUser, GdsMemberLevelVO vo) {
+        try {
+            GdsMemberLevel model = this.find(vo.getId());
+            if (!model.getName().equals(vo.getName())) {
+                List<GdsMemberLevel> memberLevel = gdsMemberLevelMapper.findByName(currentUser, vo.getName());
+                if (memberLevel != null && memberLevel.size() != 0) {
+                    return RestResponse.fail("重复的等级");
+                }
+            }
+            if (!vo.getLevelLock()) {
+                vo.setUpgradeId(null);
+                vo.setIntegral(0L);
+            }
+            if (vo.getUpgradeId() == null) {
+                vo.setLevelLock(false);
+                vo.setIntegral(0L);
+            }
+            BeanUtils.copyProperties(vo, model, new String[]{"id", "enable", "createTime", "createBy", "supplierId"});
+            model.setUpdateBy(currentUser.getId());
+            model = this.update(model);
+            return RestResponse.ok(model);
+        } catch (Exception e) {
+            return RestResponse.fail("更新失败");
+        }
+    }
+
+    @Transactional
+    public RestResponse deleteDto(SysUser currentUser, Long id) {
+        try {
+            this.delAll(id, currentUser.getId());
+            return RestResponse.ok(Boolean.TRUE);
+        } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return RestResponse.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * 供应商id选择升级需要积分最少的等级
+     *
+     * @param userId
+     * @return
+     */
+    public GdsMemberLevel selectionLevel(Long userId) {
+        List<GdsMemberLevel> levels = gdsMemberLevelMapper.selectionLevelList(userId);
+        if (levels != null && levels.size() == 1) {
+            return levels.get(0);
+        }
+        List<GdsMemberLevel> ll = gdsMemberLevelMapper.selectionLevel(userId);
+        if (ll != null && ll.size() > 0) {
+            return ll.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 积分增加判断会员是否可以升级
+     *
+     * @param totalIntegral
+     * @param levelId
+     * @return
+     */
+    public GdsMemberLevel selectLevelUpdate(Integer totalIntegral, Long levelId) {
+        GdsMemberLevel level;
+        level = this.find(levelId);
+        //判断会员等级是否可以升级
+        if (level.getLevelLock()) {
+            //判断会员当前总积分是否满足升级
+            if (totalIntegral >= level.getIntegral()) {
+                level = this.find(level.getUpgradeId());
+                return selectLevelUpdate(totalIntegral, level.getId());
+            }
+            return level;
+        }
+        return level;
+    }
+}

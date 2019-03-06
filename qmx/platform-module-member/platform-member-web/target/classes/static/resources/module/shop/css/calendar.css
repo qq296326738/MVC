@@ -1,0 +1,37 @@
+﻿ul, li, a, dd, dt, dl, i, em{ margin:0px;padding:0px;list-style:none;text-decoration:none;list-style:none;font-style:normal;font-style:normal;}
+/*www.sucaijiayuan.com*/
+/* calendar */
+.calendar{width:410px;position:absolute;background-color:#f9f9f9;border:1px solid #89caf8;color:#333!important;font-size:12px;}
+.calendar div{text-align: center;}
+.calendar_head{line-height:25px;width:100%;float:left;position:relative;background-color: #89caf8;}
+.calendar_head input{width:35%;border:0px;font-family:Arial;background-color:#fff;margin-left:5%;text-align:center;line-height:18px;outline:none;border-radius:3px;}
+.calendaremL{float:left;font-family:Arial;font-weight:bold;padding:0 5px;cursor:pointer;}
+.calendaremR{float:right;font-family:Arial;font-weight:bold;padding:0 5px;cursor:pointer;}
+.calendar_boy{float:left;position:relative;width:100%;}
+.calendar_boy i{position:absolute;left:0;top:0px;right:0px;bottom:0;text-align:center;font-size:150px;font-family:Arial;color:#eee;z-index:0;}
+._caltable{border-collapse:collapse;width:100%;float:left;position:relative;}
+._caltable tr td{height:40px;width:25px;text-align:center;cursor:pointer;border-bottom:1px solid #f1f1f1;border-right:1px solid #f1f1f1;}
+._caltable tr:first-child td{border-bottom:1px solid #ddd;cursor:default;border-bottom:1px solid #eee;border-right:0;height: 25px;}
+._caltable tr td:last-child{border-right:0;}
+._caltable tr td dt{text-align: left;margin-left: 4px;}
+._caltable tr td dd{color:#f60;text-align: right;height: 20px;margin-right: 4px;}
+._sday{color:#ff6a00;}
+.festival{color:#ff6a00!important;}
+._selDay{background-color:#ff9900;color:#fff;}
+.calYear{border:1px solid #f5d2ba;width:50px;width:80%;position:absolute;z-index:2000;left:5%;background-color:#eee;border-collapse:collapse;}
+.calYear td{text-align:center;cursor:pointer;}
+.calYear td:hover{color:#ff6a00;}
+.calMonth{border:1px solid #f5d2ba;width:50px;width:70%;position:absolute;z-index:2000;right:10%;background-color:#eee;border-collapse:collapse;}
+.calMonth td{text-align:center;cursor:pointer;}
+.calMonth td:hover{color:#ff6a00;}
+.disDay{color:#999;cursor:not-allowed!important;}
+._calcolse{position:relative;border-radius:10px;width:10px;height:10px;color:red;}
+.Wdate3{
+	width: 160px;
+	height: 28px;
+	padding-left: 10px;
+	border: 1px solid #dedede;
+	font: normal 12px/28px "SimSun";
+	background:url("data.png") no-repeat 141px center;
+	margin-right: 5px;
+}

@@ -1,0 +1,202 @@
+body {
+    font: 12px/20px Arial,"微软雅黑",sans-serif;
+}
+html, body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd, form, fieldset, legend, input, select, textarea, button, caption, th, td, blockquote, pre {
+    margin: 0;
+    padding: 0;
+}
+html, body, legend {
+    color: #333;
+}
+fieldset, img {
+    border: 0 none;
+}
+li {
+    list-style: outside none none;
+}
+.logo {
+    margin: 0 auto;
+    padding-top: 10px;
+    width: 960px;
+}
+.logo h1 {
+    float: left;
+}
+.logo ul {
+    float: right;
+    margin-top: 14px;
+}
+#header_lite .logo_right ul li, .logo ul li {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+}
+.logo ul li {
+    float: left;
+    line-height: 30px;
+}
+a {
+    color: #005bb5;
+    outline: 0 none;
+    text-decoration: none;
+}
+#header_lite .login_seprator, .logo ul .login-seprator {
+    color: #000;
+    font-family: 宋体,sans-serif;
+    line-height: 30px;
+    margin: 0 10px;
+}
+.logo ul .login-seprator {
+    color: #000;
+    font-family: 宋体,sans-serif;
+    line-height: 30px;
+    margin: 0 10px;
+}
+.logo ul .tel {
+    color: #f60;
+}
+.clearfix::after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    line-height: 0;
+    visibility: hidden;
+}
+.main {
+    border-bottom: 1px solid #eee;
+    border-top: 1px solid #dd127b;
+    font-family: "Microsoft YaHei";
+    margin: 20px auto 0;
+    width: 960px;
+}
+.main > h2 {
+    font-size: 22px;
+    font-weight: 400;
+    height: 30px;
+    line-height: 30px;
+    padding: 45px 0;
+    text-align: center;
+}
+.main > h2 span {
+    font-weight: 700;
+}
+.main ul {
+    margin-bottom: 55px;
+    margin-left: 160px;
+    position: relative;
+}
+.main ul li {
+    float: left;
+}
+.main ul li div {
+    border: 1px solid #ccc;
+    height: 300px;
+    width: 300px;
+}
+.main ul li div img {
+    height: 100%;
+    width: 100%;
+}
+.main ul li p {
+    font-size: 16px;
+    line-height: 28px;
+    margin: 10px auto;
+    width: 210px;
+}
+.main h2 span, .main ul li span {
+    color: #f60;
+}
+.main ul .desc {
+    left: 245px;
+    position: absolute;
+    top: 0;
+}
+#tcHonor {
+    height: 20px;
+    margin: 30px auto 0;
+    overflow: hidden;
+    padding: 0 265px;
+    width: 430px;
+}
+.join-hands {
+    float: left;
+    padding-right: 20px;
+}
+#tcHonor span {
+    float: left;
+    line-height: 16px;
+}
+#tcHonor a {
+    background: url(../images/pay_image.png) rgba(0, 0, 0, 0) no-repeat scroll 0 0;
+    display: inline-block;
+    float: left;
+    height: 20px;
+    margin-left: 10px;
+}
+#tcHonor .hands-1 {
+    background-position: 0 -146px;
+    width: 55px;
+}
+#tcHonor .hands-1:hover {
+    background-position: -65px -174px;
+}
+#tcHonor .hands-2 {
+    background-position: 0 -174px;
+    width: 26px;
+}
+#tcHonor .hands-2:hover {
+    background-position: -65px -58px;
+}
+#tcHonor .hands-3 {
+    background-position: 0 -118px;
+    width: 35px;
+}
+#tcHonor .hands-3:hover {
+    background-position: -64px -114px;
+}
+#tcHonor .hands-4 {
+    background-position: 0 -828px;
+    width: 48px;
+}
+#tcHonor .hands-4:hover {
+    background-position: -74px -828px;
+}
+#tcHonor .honor-1 {
+    background-position: 0 -60px;
+    width: 29px;
+}
+#tcHonor .honor-1:hover {
+    background-position: -65px 0;
+}
+#tcHonor .honor-2 {
+    background-position: 0 -89px;
+    width: 19px;
+}
+#tcHonor .honor-2:hover {
+    background-position: -65px -29px;
+}
+#tcHonor .honor-3 {
+    background-position: 0 0;
+    width: 17px;
+}
+#tcHonor .honor-3:hover {
+    background-position: -65px -84px;
+}
+#tcHonor .honor-4 {
+    background-position: 0 -30px;
+    width: 19px;
+}
+#tcHonor .honor-4:hover {
+    background-position: -65px -144px;
+}
+#footer-lite {
+    border: 0 none;
+    color: #666;
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    margin: 5px auto 10px;
+    text-align: center;
+    width: 960px;
+}

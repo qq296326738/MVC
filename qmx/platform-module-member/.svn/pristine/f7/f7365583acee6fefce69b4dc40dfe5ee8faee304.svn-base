@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberLevelMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberLevel">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="member_id" property="memberId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+        <result column="name" property="name"/>
+        <result column="level_lock" property="levelLock"/>
+        <result column="integral" property="integral"/>
+        <result column="upgrade_id" property="upgradeId"/>
+
+    </resultMap>
+
+    <select id="selectIdPage" resultType="java.lang.Long">
+        select id from gds_member_level
+        <where>
+            <if test="cm.id != null and cm.id != ''">
+                and id = #{cm.id}
+            </if>
+            <if test="cm.name != null and cm.name != ''">
+                and name = #{cm.name}
+            </if>
+            <if test="cm.levelLock != null">
+                and level_lock = #{cm.levelLock}
+            </if>
+            <if test="cm.supplierId != null and cm.supplierId !=''">
+                and supplier_id = #{cm.supplierId}
+            </if>
+            and enable_ = 1
+        </where>
+--         ORDER BY (case integral when '0' then 'a' else integral end)
+        ORDER BY integral+0
+    </select>
+
+    <select id="findByName" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_level
+        <where>
+            name = #{name}
+            <if test="cm.supplierId != null and cm.supplierId !=''">
+                and supplier_id = #{cm.id}
+            </if>
+            AND enable_ = 1
+        </where>
+    </select>
+
+    <update id="delUpgradeByLevelId">
+      UPDATE gds_member_level SET upgrade_id = NULL , level_lock = 0
+      WHERE upgrade_id = #{id}
+    </update>
+
+    <select id="findLevelAll" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_level
+        <where>
+            <if test='cm.userType.name == "供应商" '>
+                AND supplier_id = #{cm.id}
+            </if>
+            AND enable_ = 1
+        </where>
+        ORDER BY (case integral when '0' then 'a' else integral end)
+    </select>
+
+    <select id="selectionLevel" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_level
+        WHERE
+            supplier_id = #{id}
+        AND
+            integral =
+        (SELECT MIN(integral) FROM gds_member_level
+        WHERE
+        supplier_id = #{id}
+	    AND enable_ = 1 AND integral != 0
+        )
+    </select>
+
+    <update id="delUpgradeId">
+        UPDATE gds_member_level SET upgrade_id = NULL , level_lock = 0
+        WHERE  upgrade_id = #{id}
+    </update>
+
+</mapper>

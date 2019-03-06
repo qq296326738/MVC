@@ -1,0 +1,153 @@
+/*轮播器*/
+/*首页头轮播器*/
+.details .slider{
+	width:598px;
+	padding-top:336px;
+	border-right:solid 1px #bcc4cb;
+	overflow:hidden;
+	position:relative;
+}
+.details .slider img{
+	display:block;
+	border:none;
+}
+.details .slider .sli_v{
+	width:598px;
+	height:336px;
+	border-bottom:solid 1px #bcc4cb;
+	overflow:hidden;
+	top:0;
+	position:absolute;
+	height:336px;
+}
+.details .slider .sli_v > div{
+	float:left;
+}
+.details .slider .sli_v > div img{
+	width:598px;
+	height:336px;
+}
+.details .slider .sli_c{
+	max-width:598px;
+	padding-top:4px;
+	overflow:hidden;
+}
+.details .slider .sli_c > ul{
+	overflow:hidden;
+	float:left;
+	margin-right:4px;
+}
+.details .slider .sli_c > ul li{
+	width:129px;
+	height:94px;
+	overflow:hidden;
+	border:solid 3px #d2e5da;
+	float:left;
+	margin-left:4px;
+}
+.details .slider .sli_c > ul li.picth{
+	border-color:#1db73b;
+}
+.details .slider .sli_c > ul li img{
+	min-width:100%;
+	height:102px;
+}
+.det_sli_left,.det_sli_rigth{
+	width:19px;
+	height:100px;
+}
+.det_sli_left{
+	float:left;
+	background:url(../images/slide_lr.png) no-repeat scroll #1db73b 0 center;
+}
+.det_sli_rigth{
+	float:left;
+	background:url(../images/slide_lr.png) no-repeat scroll #1db73b -19px center;
+}
+.hotelDetails .slider .sli_c > ul li.picth{
+	border-color:#ff7d29;
+}
+.hotelDetails .det_sli_left{
+	background:url(../images/slide_lr.png) no-repeat scroll #ff7d29 0 center;
+}
+.hotelDetails .det_sli_rigth{
+	background:url(../images/slide_lr.png) no-repeat scroll #ff7d29 -19px center;
+}
+.freeDetails .slider{
+	padding-top:281px;
+	border-right:0;
+}
+.freeDetails .slider .sli_v{
+	width:502px;
+	height:281px;
+	overflow:hidden;
+}
+.freeDetails .slider .sli_v > div img{
+	width:502px;
+	height:281px;
+}
+.freeDetails .slider .sli_c{
+	position:relative;
+	width:88px;
+	height:241px;
+	padding-bottom:40px;
+	padding-top:0;
+}
+.freeDetails .slider .sli_c > ul li{
+	width:88px;
+	height:46px;
+	overflow:hidden;
+	border:none;
+	margin-bottom:2px;
+	margin-left:0;
+}
+.freeDetails .slider .sli_c > ul li img{
+	width:88px;
+	height:46px;
+}
+.freeDetails .slider .sli_c > ul li.picth{
+	width:82px;
+	height:40px;
+	padding:1px;
+	border:solid 2px #5786f2;
+}
+.freeDetails .slider .sli_c > ul li.picth img{
+	width:82px;
+	height:40px;
+}
+.freeDetails .det_product > .left .sli_c{
+	width:88px;
+	*width:92px;
+	padding-left:8px;
+	background-color:#fff;
+	position:absolute;
+	right:0;
+	top:0;
+}
+.freeDetails .det_sli_left,.freeDetails .det_sli_rigth{
+	width:44px;
+	*width:42px;
+	height:40px;
+	position:absolute;
+	bottom:0;
+}
+.freeDetails .det_sli_left:hover,.freeDetails .det_sli_rigth:hover{
+	width:40px;
+	height:36px;
+	border:solid 2px #5786f2;
+}
+.freeDetails .det_sli_left{
+	left:8px;
+	background:url(../images/details_icon.png) no-repeat scroll #fff 0 -142px;
+}
+.freeDetails .det_sli_left:hover{
+	background:url(../images/details_icon.png) no-repeat scroll #fff 0 -144px;
+}
+.freeDetails .det_sli_rigth{
+	right:0;
+	*right:4px;
+	background:url(../images/details_icon.png) no-repeat scroll #fff 4px -182px;
+}
+.freeDetails .det_sli_rigth:hover{
+	background:url(../images/details_icon.png) no-repeat scroll #fff 1px -184px;
+}

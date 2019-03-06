@@ -1,0 +1,7 @@
+-------------------------------------------------------------------------------
+Test set: com.qmx.member.PlatformMemberFacadeApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.648 s <<< FAILURE! - in com.qmx.member.PlatformMemberFacadeApplicationTests
+initializationError(com.qmx.member.PlatformMemberFacadeApplicationTests)  Time elapsed: 0.006 s  <<< ERROR!
+java.lang.IllegalStateException: Unable to find a @SpringBootConfiguration, you need to use @ContextConfiguration or @SpringBootTest(classes=...) with your test
+

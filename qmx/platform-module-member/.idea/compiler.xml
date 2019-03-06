@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="platform-member-facade" />
+        <module name="platform-member-front" />
+        <module name="platform-member-service" />
+        <module name="platform-member-web" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel target="1.8">
+      <module name="platform-member-facade" target="1.8" />
+      <module name="platform-member-front" target="1.8" />
+      <module name="platform-member-service" target="1.8" />
+      <module name="platform-member-web" target="1.8" />
+      <module name="platform-module-member" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

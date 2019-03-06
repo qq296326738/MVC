@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberConsumptionMapper">
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberConsumption">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="member_id" property="memberId"/>
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+
+        <result column="level_id" property="levelId"/>
+        <result column="level_name" property="levelName"/>
+        <result column="integral_proportion" property="integralProportion"/>
+
+    </resultMap>
+
+    <sql id="Base_Condition">
+        <where>
+            <if test="cm.levelId != null and cm.levelId != ''">
+                and level_id = #{cm.levelId}
+            </if>
+            <if test="cm.supplierId != null and cm.supplierId !=''">
+                and supplier_id = #{cm.supplierId}
+            </if>
+            and enable_ = 1
+        </where>
+    </sql>
+
+    <select id="selectListEX" resultMap="BaseResultMap">
+        select * from gds_member_consumption
+        <include refid="Base_Condition"/>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="findByLevelId" resultMap="BaseResultMap">
+        select * from gds_member_consumption
+        <where>
+            <if test='cm.userType.name == "供应商" '>
+                AND supplier_id = #{cm.id}
+            </if>
+            AND level_id = #{levelId}
+        </where>
+        and enable_ = 1
+    </select>
+
+    <update id="delByLevenId">
+        UPDATE gds_member_consumption SET enable_ = 0 WHERE level_id = #{id}
+    </update>
+
+    <select id="findByIdAndPid" resultMap="BaseResultMap">
+        SELECT d.* FROM gds_member_consumption d
+        LEFT JOIN gds_member_associated a ON d.id  = a.ids
+        WHERE d.enable_ = 1 AND d.level_id = #{dto.levelId}
+        AND a.product_id = #{pid}
+    </select>
+
+    <select id="selectWhetherOrNot" resultMap="BaseResultMap">
+        SELECT
+            *
+        FROM
+            gds_member_consumption c
+        WHERE
+            c.id NOT IN (
+                SELECT
+                    a.ids
+                FROM
+                    gds_member_associated a
+                LEFT JOIN gds_member_consumption c ON c.id = a.ids
+                WHERE
+                    c.enable_ = 1
+                AND c.supplier_id = #{id}
+                AND c.level_id = #{levelId}
+            )
+        AND c.enable_ = 1
+        AND c.supplier_id = #{id}
+        AND c.level_id = #{levelId}
+    </select>
+
+</mapper>

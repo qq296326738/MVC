@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title></title>
+    <script src="${base}/member/js/mui.min.js"></script>
+    <link href="${base}/member/css/mui.css" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" href="${base}/member/css/member.css"/>
+    <script type="text/javascript" charset="utf-8">
+      	mui.init();
+    </script>
+    <style>
+    	html, body, .member {
+    		height: 100%;
+    	}
+    	.member {
+    		position: relative;
+    	}
+    </style>
+</head>
+<body class="QRcode">
+	<div class="member">
+		<h4 class="member-title">扫码支付</h4>
+		<div class="mui-content">
+		    <div class="QRcode-box">
+		    	<div class="member-flex QRcode-user">
+		    		<div class="QRcode-user-img">
+					<#if data.image??>
+                        <img src="${data.image!}"/>
+					<#else >
+                        <img src="${base}/member/images/index-user-header.jpg"/>
+					</#if>
+		    		</div>
+		    		<p class="member-flex-main">${data.levelName!}会员</p>
+		    	</div>
+		    	<div class="QRcode-img-box">
+		    		<div class="QRcode-img"  style="position:relative;">
+		    			<img src="${codeUrl!}" style="position:absolute; width: 200%; left:-45px; top:50px;" />
+		    		</div>
+		    	</div>
+		    	<div class="QRcode-price">
+		    		<h5>当前可用余额：${data.money!}元</h5>
+		    		<a href="recharge?id=${id!}" class="member-btn-5">去充值</a>
+		    	</div>
+		    </div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+package com.qmx.member.service;
+
+import com.qmx.base.api.annotation.GdsCacheConfig;
+import com.qmx.base.api.dto.RestResponse;
+import com.qmx.base.core.base.BaseService;
+import com.qmx.coreservice.model.SysUser;
+import com.qmx.member.mapper.GdsInitializationMapper;
+import com.qmx.member.model.GdsInitialization;
+import com.qmx.member.query.GdsInitializationVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+/**
+ * 会员初始化设置
+ */
+@Service
+@GdsCacheConfig(cacheNS = "GDS-MEMBER", cacheName = "GdsInitialization")
+public class GdsInitializationService extends BaseService<GdsInitialization> {
+
+    @Autowired
+    private GdsInitializationMapper gdsInitializationMapper;
+
+    public GdsInitialization findBySupplierId(Long currentUser) {
+        return gdsInitializationMapper.findBySupplierId(currentUser);
+    }
+
+    @Transactional(rollbackFor = Throwable.class)
+    public RestResponse<GdsInitialization> addInitialization(SysUser currentUser, GdsInitializationVO vo) {
+        int integral = vo.getIntegral() == null ? 0 : vo.getIntegral();
+        int dailyIntegral = vo.getDailyIntegral() == null ? 1 : vo.getDailyIntegral();
+        try {
+            GdsInitialization init = gdsInitializationMapper.findBySupplierId(currentUser.getId());
+            if (init == null) {
+                init = new GdsInitialization();
+                init.setSupplierId(currentUser.getId());
+                init.setIntegral(integral);
+                init.setMobile(vo.getMobile());
+                init.setDailyIntegral(dailyIntegral);
+                init.setDaily(vo.getDaily());
+                init.setRewardIntegral(vo.getRewardIntegral());
+                init.setCodeIntegral(vo.getCodeIntegral());
+                this.save(init);
+            } else {
+                init.setIntegral(integral);
+                init.setMobile(vo.getMobile());
+                init.setDailyIntegral(dailyIntegral);
+                init.setDaily(vo.getDaily());
+                init.setRewardIntegral(vo.getRewardIntegral());
+                init.setCodeIntegral(vo.getCodeIntegral());
+                this.update(init);
+            }
+            return RestResponse.ok(init);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return RestResponse.fail("修改失败");
+        }
+    }
+}

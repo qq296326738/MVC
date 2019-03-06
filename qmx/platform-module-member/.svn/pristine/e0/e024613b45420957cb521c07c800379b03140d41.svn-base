@@ -1,0 +1,403 @@
+package com.qmx.member.service;
+
+import com.netflix.discovery.converters.Auto;
+import com.qmx.base.api.annotation.GdsCacheConfig;
+import com.qmx.base.api.exception.BusinessException;
+import com.qmx.base.core.base.BaseService;
+import com.qmx.member.enumerate.*;
+import com.qmx.member.mapper.GdsMemberIntegeralMapper;
+import com.qmx.member.model.*;
+import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+
+/**
+ * 会员积分管理
+ */
+@Service
+@GdsCacheConfig(cacheNS = "GDS-MEMBER", cacheName = "GdsMemberIntegeral")
+public class GdsMemberIntegeralService extends BaseService<GdsMemberIntegeral> {
+
+    @Autowired
+    private GdsMemberService memberService;
+    @Autowired
+    private GdsMemberIntegeralMapper gdsMemberIntegeralMapper;
+    @Autowired
+    private GdsMemberLevelService gdsMemberLevelService;
+    @Autowired
+    private GdsMemberExchangeOrderService gdsMemberExchangeOrderService;
+    @Autowired
+    private GdsMemberActivityIntegralService activityIntegralService;
+
+    /**
+     * 会员签到新增积分记录
+     *
+     * @param data 签到信息
+     */
+    @Transactional
+    public void createSign(GdsMemberSign data) {
+        GdsMemberIntegeral gdsMemberIntegeral = new GdsMemberIntegeral();
+        gdsMemberIntegeral.setSourceType(SourceType.huodong);
+        gdsMemberIntegeral.setSnText("签到每一天");
+        gdsMemberIntegeral.setTime(new Date());
+        String sn = RandomStringUtils.randomNumeric(18);
+        gdsMemberIntegeral.setSn(sn);
+        gdsMemberIntegeral.setIntegeral(data.getIntegral());
+        gdsMemberIntegeral.setRecordType(true);
+        gdsMemberIntegeral.setStatus(true);
+        gdsMemberIntegeral.setMemberId(data.getMemberId());
+        gdsMemberIntegeral.setRecordId(data.getId());
+        GdsMember gdsMember = memberService.find(data.getMemberId());
+        gdsMemberIntegeral.setFzId(gdsMember.getFzId());
+        gdsMemberIntegeral.setSupplierId(gdsMember.getSupplierId());
+        gdsMemberIntegeral.setRechargeType(RechargeType.huodong);
+        gdsMemberIntegeral.setSynState(false);
+        this.save(gdsMemberIntegeral);
+    }
+
+    /**
+     * 查询用户积分记录
+     *
+     * @param id
+     * @return
+     */
+    public List<GdsMemberIntegeral> getMemberIntegeralList(Long id) {
+        return gdsMemberIntegeralMapper.findAll(id);
+    }
+
+    /**
+     * 积分记录表与金额记录表关联查询
+     *
+     * @param id
+     * @return
+     */
+    public GdsMemberIntegeral findByRecordId(Long id) {
+        return gdsMemberIntegeralMapper.findByRecordId(id);
+    }
+
+    /**
+     * 获得兑换记录
+     *
+     * @param id
+     * @return
+     */
+    public Map<String, List<GdsMemberIntegeral>> getExchangeList(Long id) {
+        try {
+            List<GdsMemberIntegeral> list = gdsMemberIntegeralMapper.getExchangeList(id);
+            Iterator<GdsMemberIntegeral> iterator = list.iterator();
+            HashMap<String, List<GdsMemberIntegeral>> hashMap = new LinkedHashMap<>();
+            SimpleDateFormat timeYM = new SimpleDateFormat("yyyy年MM月");
+            while (iterator.hasNext()) {
+                GdsMemberIntegeral integeral = iterator.next();
+                String time = timeYM.format(integeral.getTime());
+                if (!hashMap.containsKey(time)) {
+                    hashMap.put(time, new ArrayList<GdsMemberIntegeral>());
+                }
+                hashMap.get(time).add(integeral);
+            }
+            return hashMap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 兑换商品保存积分记录,更新会员积分
+     *
+     * @param data
+     * @param fzId
+     */
+    @Transactional
+    public void createOrder(GdsMemberExchangeOrder data, String fzId) {
+        GdsMemberIntegeral gdsMemberIntegeral = new GdsMemberIntegeral();
+        gdsMemberIntegeral.setSourceType(SourceType.duihuan);
+        if (data.getDeliverType() == DeliverType.DUIHUAN) {
+            gdsMemberIntegeral.setRemark(data.getRedeemCode());
+        }
+        gdsMemberIntegeral.setSnText(data.getProductName() + "*" + data.getCount());
+        gdsMemberIntegeral.setProductId(data.getExchangeId());
+        gdsMemberIntegeral.setProductName(data.getProductName());
+        gdsMemberIntegeral.setTime(new Date());
+        gdsMemberIntegeral.setSn(data.getSn());
+        gdsMemberIntegeral.setIntegeral(data.getIntegral());
+        gdsMemberIntegeral.setRecordType(false);
+        gdsMemberIntegeral.setStatus(true);
+        gdsMemberIntegeral.setMemberId(data.getMemberId());
+        gdsMemberIntegeral.setSupplierId(data.getSupplierId());
+        gdsMemberIntegeral.setRecordId(data.getId());
+        gdsMemberIntegeral.setRechargeType(RechargeType.duihuan);
+        gdsMemberIntegeral.setFzId(fzId);
+        gdsMemberIntegeral.setSynState(false);
+        this.save(gdsMemberIntegeral);
+    }
+
+    /**
+     * 充值回调通知新增积分记录
+     *
+     * @param money
+     */
+    @Transactional
+    public void createMoneyRecord(GdsMemberMoney money) {
+        GdsMemberIntegeral gdsMemberIntegeral = new GdsMemberIntegeral();
+        gdsMemberIntegeral.setFzId(money.getFzId()); //同步会员才有fzid
+        gdsMemberIntegeral.setSourceType(SourceType.chongzhi);
+        gdsMemberIntegeral.setSnText(money.getSnText());
+        gdsMemberIntegeral.setTime(new Date());
+        gdsMemberIntegeral.setSn(money.getSn());
+        gdsMemberIntegeral.setIntegeral(money.getIntegral());
+        gdsMemberIntegeral.setRecordType(true);
+        gdsMemberIntegeral.setStatus(true);
+        gdsMemberIntegeral.setMemberId(money.getMemberId());
+        gdsMemberIntegeral.setSupplierId(money.getSupplierId());
+        gdsMemberIntegeral.setRecordId(money.getId());
+        gdsMemberIntegeral.setRechargeType(money.getRechargeType());
+        gdsMemberIntegeral.setSynState(false);
+        this.save(gdsMemberIntegeral);
+    }
+
+    /**
+     * 查询会员积分记录同步状态
+     *
+     * @param id 供应商id
+     * @return
+     */
+    public List<GdsMemberIntegeral> queryIntegeralIsUpdated(Long id) {
+        List<GdsMemberIntegeral> list = gdsMemberIntegeralMapper.queryIntegeralIsUpdated(id);
+        if (list != null && list.size() != 0) {
+            Iterator<GdsMemberIntegeral> iterator = list.iterator();
+            while (iterator.hasNext()) {
+                GdsMemberIntegeral next = iterator.next();
+                if (next.getFzId() == null) {
+                    GdsMember gdsMember = memberService.find(next.getMemberId());
+                    if (gdsMember == null || gdsMember.getFzId() == null) {
+                        iterator.remove();
+                    } else {
+                        next.setFzId(gdsMember.getFzId());
+                    }
+                }
+            }
+            return list;
+        }
+        return null;
+    }
+
+    /**
+     * 同步会员积分状态
+     *
+     * @param id 积分记录id
+     * @return
+     */
+    @Transactional(rollbackFor = Throwable.class)
+    public GdsMemberIntegeral updaMemberIntegeralSyn(Long id) {
+        GdsMemberIntegeral gdsMemberIntegeral = this.find(id);
+        Assert.notNull(gdsMemberIntegeral, "该积分id没有信息");
+        //获得的积分
+        Integer jiFen = gdsMemberIntegeral.getIntegeral();
+        GdsMember gdsMember = memberService.find(gdsMemberIntegeral.getMemberId());
+        Assert.notNull(gdsMember, "用户信息获取失败");
+        if (gdsMemberIntegeral.getSourceType() == SourceType.zhuce) {
+            if (!gdsMember.getSynState()) {
+                return null;
+            }
+        }
+        //会员现有积分
+        Integer integral = gdsMember.getIntegral();
+        //会员总积分
+        Integer totalIntegral = gdsMember.getTotalIntegral();
+        if (gdsMemberIntegeral.getRecordType()) {
+            gdsMember.setIntegral(jiFen + integral);
+            gdsMember.setTotalIntegral(jiFen + totalIntegral);
+            GdsMemberLevel level = gdsMemberLevelService.selectLevelUpdate(gdsMember.getTotalIntegral(), gdsMember.getLevelId());
+            if (level != null) {
+                gdsMember.setLevelId(level.getId());
+                gdsMember.setLevelName(level.getName());
+            }
+        } else {
+            gdsMember.setIntegral(integral - jiFen);
+        }
+        gdsMemberIntegeral.setBalanceIntegeral(gdsMember.getIntegral());
+        gdsMemberIntegeral.setSynState(true);
+        GdsMemberIntegeral update = this.update(gdsMemberIntegeral);
+        memberService.update(gdsMember);
+        return update;
+    }
+
+    /**
+     * 会员注册赠送积分
+     *
+     * @param model
+     * @param integral
+     */
+    @Transactional
+    public void createRegister(GdsMember model, Integer integral) {
+        GdsMemberIntegeral gdsMemberIntegeral = new GdsMemberIntegeral();
+        gdsMemberIntegeral.setSourceType(SourceType.zhuce);
+        gdsMemberIntegeral.setSnText("会员注册赠送积分");
+        gdsMemberIntegeral.setTime(new Date());
+        GdsMemberActivityIntegral activityIntegral = activityIntegralService.findRegisterByTime(model.getSupplierId());
+        if (activityIntegral != null) {
+            Double multiple = activityIntegral.getMultiple();
+            integral = (int) Math.round(multiple * integral);
+
+        }
+        gdsMemberIntegeral.setIntegeral(integral);
+        String sn = RandomStringUtils.randomNumeric(18);
+        gdsMemberIntegeral.setSn(sn);
+        gdsMemberIntegeral.setRecordType(true);
+        gdsMemberIntegeral.setStatus(true);
+        gdsMemberIntegeral.setMemberId(model.getId());
+        gdsMemberIntegeral.setSupplierId(model.getSupplierId());
+//        gdsMemberIntegeral.setRecordId(data.getId());
+//        gdsMemberIntegeral.setRechargeType(RechargeType.duihuan);
+        gdsMemberIntegeral.setSynState(false);
+        if (StringUtils.isNotEmpty(model.getFzId())) {
+            gdsMemberIntegeral.setFzId(model.getFzId());
+        }
+        this.save(gdsMemberIntegeral);
+    }
+
+    /**
+     * 删除会员删除对应的积分记录
+     *
+     * @param id     会员id
+     * @param userId 操作人id
+     */
+    @Transactional
+    public void delBymemberId(Long id, Long userId) {
+        gdsMemberIntegeralMapper.delBymemberId(id, userId, new Date());
+    }
+
+    /**
+     * 订单号查询积分记录
+     *
+     * @param sn
+     * @param id
+     * @return
+     */
+    public GdsMemberIntegeral findBySn(String sn, Long id) {
+        return gdsMemberIntegeralMapper.findBySn(sn, id);
+    }
+
+    /**
+     * 同步线下会员积分记录
+     *
+     * @param model
+     * @return
+     */
+    @Transactional(rollbackFor = Throwable.class)
+    public GdsMemberIntegeral updaMemberIntegeralUnderLineSyn(GdsMemberIntegeral model) {
+        Boolean recordType = model.getRecordType();
+        GdsMember gdsMember = memberService.find(model.getMemberId());
+        Assert.notNull(gdsMember, "没有查询到该用户");
+        Integer integral = gdsMember.getIntegral();
+        Integer totalIntegral = gdsMember.getTotalIntegral();
+        Integer jiFen = model.getIntegeral();
+        if (recordType) {
+            gdsMember.setIntegral(jiFen + integral);
+            gdsMember.setTotalIntegral(jiFen + totalIntegral);
+            GdsMemberLevel level = gdsMemberLevelService.selectLevelUpdate(gdsMember.getTotalIntegral(), gdsMember.getLevelId());
+            if (level != null) {
+                gdsMember.setLevelId(level.getId());
+                gdsMember.setLevelName(level.getName());
+            }
+        } else {
+            int i = integral - jiFen;
+            if (i < 0) {
+                throw new BusinessException("会员积分余额不足");
+            }
+            gdsMember.setIntegral(i);
+            model.setSourceType(SourceType.duihuan);
+            model.setProductName(model.getSnText());
+
+        }
+        model.setBalanceIntegeral(gdsMember.getIntegral());
+        GdsMemberIntegeral date = this.save(model);
+        if (model.getSourceType() == SourceType.duihuan) {
+            GdsMemberExchangeOrder order = new GdsMemberExchangeOrder();
+            order.setMemberId(date.getMemberId());
+            order.setSupplierId(date.getSupplierId());
+            order.setSnText(date.getSnText());
+            order.setProductName(date.getProductName());
+            order.setSn(date.getSn());
+            order.setCount(1);
+            order.setIntegral(date.getIntegeral());
+            order.setName(gdsMember.getName() == null ? (gdsMember.getNickName() == null ? "匿名" : gdsMember.getNickName()) : gdsMember.getName());
+            order.setMobile(gdsMember.getMobile() == null ? "线下兑换" : gdsMember.getMobile());
+            order.setArea("线下兑换");
+            order.setAddress("线下兑换");
+            order.setDeliverType(DeliverType.DUIHUAN);
+            order.setRedeemCode("线下兑换");
+            order.setStateType(StateType.YLQ);
+            order.setState(Boolean.TRUE);
+            order.setTime(date.getTime());
+            gdsMemberExchangeOrderService.save(order);
+        }
+        memberService.update(gdsMember);
+        return date;
+    }
+
+    /**
+     * 会员分享获得积分
+     *
+     * @param userId   会员id
+     * @param integral 获得积分
+     */
+    @Transactional
+    public void createCodeInvite(Long userId, Integer integral) {
+        GdsMemberIntegeral gdsMemberIntegeral = new GdsMemberIntegeral();
+        gdsMemberIntegeral.setSourceType(SourceType.fenxiang);
+        gdsMemberIntegeral.setRechargeType(RechargeType.huodong);
+        gdsMemberIntegeral.setSnText("分享二维码赠送积分");
+        gdsMemberIntegeral.setTime(new Date());
+        gdsMemberIntegeral.setIntegeral(integral);
+        String sn = RandomStringUtils.randomNumeric(18);
+        gdsMemberIntegeral.setSn(sn);
+        gdsMemberIntegeral.setRecordType(true);
+        gdsMemberIntegeral.setStatus(true);
+        GdsMember gdsMember = memberService.find(userId);
+        gdsMemberIntegeral.setMemberId(userId);
+        gdsMemberIntegeral.setSupplierId(gdsMember.getSupplierId());
+        gdsMemberIntegeral.setSynState(false);
+        if (StringUtils.isNotEmpty(gdsMember.getFzId())) {
+            gdsMemberIntegeral.setFzId(gdsMember.getFzId());
+        }
+        this.save(gdsMemberIntegeral);
+
+    }
+
+    /**
+     * 兑换使用的消费金额增加会员积分
+     *
+     * @param gdsMember          会员信息
+     * @param data               订单信息
+     * @param money              兑换金额
+     * @param integralProportion 兑换比例
+     */
+    public void createMoneyByOrder(GdsMember gdsMember, GdsMemberExchangeOrder data, double money, Double integralProportion) {
+        GdsMemberIntegeral gdsMemberIntegeral = new GdsMemberIntegeral();
+        gdsMemberIntegeral.setRecordId(data.getId());
+        gdsMemberIntegeral.setProductId(data.getExchangeId());
+        gdsMemberIntegeral.setProductName(data.getProductName());
+        gdsMemberIntegeral.setSourceType(SourceType.duihuan);
+        gdsMemberIntegeral.setRechargeType(RechargeType.hyye);
+        gdsMemberIntegeral.setSnText(data.getSnText());
+        gdsMemberIntegeral.setTime(data.getTime());
+        gdsMemberIntegeral.setIntegeral((int) Math.round(((money * integralProportion) * 100) / 100));
+        gdsMemberIntegeral.setSn(data.getSn());
+        gdsMemberIntegeral.setRecordType(true);
+        gdsMemberIntegeral.setStatus(true);
+        gdsMemberIntegeral.setMemberId(gdsMember.getId());
+        gdsMemberIntegeral.setSupplierId(gdsMember.getSupplierId());
+        gdsMemberIntegeral.setSynState(false);
+        gdsMemberIntegeral.setFzId(gdsMember.getFzId());
+        this.save(gdsMemberIntegeral);
+    }
+}

@@ -1,0 +1,131 @@
+#ifame-content {
+	background-color: #fff;
+}
+
+#header {
+	z-index: 30;
+}
+.sidebar-scroll {
+	overflow: visible !important;
+}
+.qmx-menu-1 {
+	position: absolute;
+	top: -61px;
+	list-style: none;
+	padding: 0;
+	margin-left: 0;
+	z-index: 999;
+	width: 180px;
+	height: 60px;
+}
+.qmx-menu-1 .sidebar-toggle-box {
+	padding: 0;
+	width: 180px;
+	background-color: red;
+}
+#container {
+	margin-top: -64px;
+}
+#sidebar > .qmx-menu-1 {
+	margin-bottom: 0 !important;
+	margin-top: -61px;
+}
+#sidebar > .qmx-menu-1 > li {
+	display: block;
+	line-height: 39px;
+}
+#sidebar .qmx-menu-1 > li > a {
+	height: 49px;
+}
+#sidebar .qmx-menu-1 > li > a .arrow,#sidebar .qmx-menu-1 > li.active > a .arrow, #sidebar .qmx-menu-1 > li > a:hover .arrow, #sidebar > .qmx-menu-1 > li.active > a .arrow.open, #sidebar > .qmx-menu-1 > li > a:hover .arrow.open, #sidebar > .qmx-menu-1 > li > a .arrow.open  {
+	margin-top: 22px;
+}
+.fixed-top #header .container-fluid {
+	padding-left: 200px;
+}
+#sidebar .sidebar-scroll {
+	z-index: 120;
+}
+#sidebar > .qmx-menu-1 .dropdown-toggle {
+	width: 100%;
+}
+#sidebar > .qmx-menu-1 > li > a {
+	background-color: #427dae;
+	font-size: 16px;
+	text-align: center;
+	font-family:"Helvetica Neue";
+	padding-left: 0;
+	padding-right: 0;
+}
+#sidebar > .qmx-menu-1 > li > .dropdown-menu {
+	position: absolute;
+	top: 58px;
+}
+.qmx-menu-1 .dropdown-menu.extended {
+	max-width: none !important;
+	width: 180px !important;
+	min-width: none !important;
+	box-sizing: border-box;
+}
+.qmx-menu-1 .dropdown-toggle .icon-double-angle-down {
+	position: absolute;
+	left: 90px;
+	margin-left: -12px;
+	top: 38px;
+}
+
+@media (max-width: 979px) {
+	.fixed-top #header .container-fluid {
+		padding-left: 20px;
+	}
+	.qmx-menu-1 {
+		position: relative;
+		top: 0;
+	}
+	#sidebar > .qmx-menu-1 {
+		margin-top: 0;
+	}
+	.qmx-menu-1 .dropdown-toggle .icon-double-angle-down {
+		display: block;
+		position: static;
+		left: auto;
+		top: auto;
+	}
+	#sidebar > .qmx-menu-1 .dropdown-toggle {
+		padding-left: 0;
+		padding-right: 0;
+	}
+	#sidebar > .qmx-menu-1 > li > a i {
+		display: inline-block !important;
+		margin-left: 5px;
+	}
+	#sidebar > .qmx-menu-1 > li > a > span {
+		line-height: 49px;
+	}
+	#sidebar .open .dropdown-menu {
+		width: 100% !important;
+		margin-left: 0;
+		margin-right: 0;
+	}
+	.nav-collapse .qmx-menu-1 .dropdown-menu li + li a {
+		margin-bottom: 0;
+	}
+}
+@media (max-width: 767px) {
+	#header .brand {
+		padding: 16px 25px;
+	}
+	.fixed-top #header .container-fluid {
+	 	margin: 0px;
+	 	padding-left:5px;
+	}
+}
+
+/*字体*/
+@font-face {
+	font-family: fontawesome;
+	src: url('../assets/font-awesom/fontawesome-webfont.eot') format('eot'),
+		 url('../assets/font-awesom/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
+		 url('../assets/font-awesom/fontawesome-webfont.ttf') format('truetype'),
+		 url('../assets/font-awesom/fontawesome-webfont.svg') format('svg');
+}

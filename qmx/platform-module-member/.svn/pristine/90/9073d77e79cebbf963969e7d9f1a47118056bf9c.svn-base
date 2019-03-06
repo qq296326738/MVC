@@ -1,0 +1,145 @@
+package com.qmx.member.front.controller.member;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.qmx.base.api.dto.RestResponse;
+import com.qmx.base.api.exception.BusinessException;
+import com.qmx.member.enumerate.ExchangeProductType;
+import com.qmx.member.model.GdsMember;
+import com.qmx.member.model.GdsMemberExchange;
+import com.qmx.member.model.GdsMemberExchangeOrder;
+import com.qmx.member.query.GdsMemberExchangeOrderVO;
+import com.qmx.member.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+
+/**
+ * 会员兑换
+ */
+@Controller
+@RequestMapping("/member")
+public class MemberExchangController {
+
+    @Autowired
+    private GdsMemberExchangeService gdsMemberExchangeService;
+    @Autowired
+    private GdsMemberService gdsMemberService;
+    @Autowired
+    private GdsMemberExchangeOrderService gdsMemberExchangeOrderService;
+//    @Autowired
+//    private SysSmsService sysSmsService;
+
+    /**
+     * 历史总充值(消费)积分
+     * 进入兑换商城页面
+     *
+     * @param id
+     * @param integral
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/exchange")
+    public String exchange(Long id, Double integral, ModelMap model) {
+        Assert.notNull(id, "用户id不能为空");
+        //商品列表,为null查询全部
+        List<GdsMemberExchange> list = gdsMemberExchangeService.findExchangeList(id, null);
+        model.addAttribute("id", id);
+        model.addAttribute("list", list);
+        model.addAttribute("type", ExchangeProductType.values());
+        model.addAttribute("integral", integral);
+        return "member/memberExchang/exchange";
+    }
+
+    /**
+     * 选择类型更新商品
+     *
+     * @param type
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "/findExchangeList")
+    public JSONArray findExchangeList(Long userId, ExchangeProductType type) {
+        List<GdsMemberExchange> GdsMemberExchanges = gdsMemberExchangeService.findExchangeList(userId, type);
+        JSONArray list = new JSONArray();
+        for (GdsMemberExchange exchange : GdsMemberExchanges) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("image", exchange.getImage());
+            jsonObject.put("productName", exchange.getProductName());
+            jsonObject.put("integeral", exchange.getIntegeral());
+            jsonObject.put("id", exchange.getId().toString());
+            list.add(jsonObject);
+        }
+        return list;
+    }
+
+    /**
+     * 进入立即兑换
+     *
+     * @param id
+     * @param userId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/exchangeAddress")
+    public String exchangeAddress(Long id, Long userId, ModelMap model) {
+        Assert.notNull(id, "商品id不能为空");
+        Assert.notNull(userId, "用户id不能为空");
+        GdsMember gdsMember = gdsMemberService.find(userId);
+        if (gdsMember != null) {
+            if (StringUtils.isEmpty(gdsMember.getFzId())) {
+//                throw new BusinessException("会员信息暂未同步,请稍后再试");
+                model.addAttribute("msg", "会员信息暂未同步,请稍后再试");
+                return "error";
+            }
+        }
+        GdsMemberExchange data = gdsMemberExchangeService.find(id);
+        model.addAttribute("data", data);
+        model.addAttribute("userId", userId);
+        return "member/memberExchang/exchangeAddress";
+    }
+
+    /**
+     * (确认)兑换资料填写页面
+     *
+     * @param vo
+     * @return
+     */
+    @RequestMapping(value = "/toExchangeSuccess")
+    public String toExchangeSuccess(GdsMemberExchangeOrderVO vo) {
+        Assert.notNull(vo.getExchangeId(), "商品id不能为空");
+        Assert.notNull(vo.getMemberId(), "用户id不能为空");
+        //创建兑换订单
+        RestResponse<GdsMemberExchangeOrder> response = gdsMemberExchangeOrderService.createExchange(vo);
+        if (!response.success()) {
+            throw new BusinessException(response.getErrorMsg());
+        }
+        // TODO zzq兑换订单创建成功,发送短信给收货人  判断是发送兑换码(YFDHM)还是寄货(YTZFH),如果是寄货,则需要双发都发送短信
+//        SendSmsDto sendSmsDto = new SendSmsDto();
+//        SysUser sysUser = new SysUser();
+//        sysUser.setId(vo.getSupplierId());
+//        sysSmsService.sendSms(sendSmsDto,sysUser);
+        return "redirect:exchangeSuccess/?id=" + response.getData().getId();
+    }
+
+    /**
+     * 重定向到兑换成功页面,防止页面刷新
+     *
+     * @param
+     * @return
+     */
+    @RequestMapping(value = "/exchangeSuccess", method = RequestMethod.GET)
+    public String exchangeSuccess(Long id, ModelMap model) {
+        GdsMemberExchangeOrder order = gdsMemberExchangeOrderService.find(id);
+        model.addAttribute("data", order);
+        return "member/memberExchang/exchangeSuccess";
+    }
+}
+

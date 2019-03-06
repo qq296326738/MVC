@@ -1,0 +1,98 @@
+package com.qmx.member.mapper;
+
+import com.qmx.base.core.base.IBaseMapper;
+import com.qmx.member.model.GdsMember;
+import com.qmx.member.query.GdsMemberVO;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+
+@Repository
+public interface GdsMemberMapper extends IBaseMapper<GdsMember> {
+    /**
+     * 更新会员状态
+     */
+    void updateState();
+
+    /**
+     * 根据openid查询用户
+     *
+     * @param openid
+     * @return
+     */
+    GdsMember findByOpenId(@Param("openid") String openid);
+
+    /**
+     * 前台更新编辑
+     *
+     * @param vo
+     * @return
+     */
+    void updateMemmber(@Param("cm") GdsMemberVO vo);
+
+    /**
+     * 根据手机号和身份证查询是否有会员
+     *
+     * @param id 供应商id
+     * @param vo
+     * @return
+     */
+    Long selectMobileAndIdcard(@Param("id") Long id, @Param("cm") GdsMemberVO vo);
+
+    /**
+     * 前端登录该手机号查询会员
+     *
+     * @param userId
+     * @param mobile
+     * @return
+     */
+    GdsMember selectMobile(@Param("supplierId") Long userId, @Param("mobile") String mobile);
+
+    /**
+     * 前端会员更新信息查询身份证号是否有相同
+     *
+     * @param vo
+     * @return
+     */
+    GdsMember selectIdcard(@Param("cm") GdsMemberVO vo);
+
+    /**
+     * 每年定时消除会员积分
+     */
+    void timingUpdate();
+
+    /**
+     * 生成随机会员虚拟卡号
+     *
+     * @param id         供应商id
+     * @param cardNumber 卡号
+     * @return
+     */
+    Long selectCardNumberCount(@Param("id") Long id, @Param("cardNumber") String cardNumber);
+
+    /**
+     * 查询是否有未同步
+     *
+     * @param id
+     * @return
+     */
+    List<GdsMember> queryMemberIsUpdated(@Param("id") Long id);
+
+    /**
+     * 更新同步状态
+     *
+     * @param id
+     * @param fzId
+     */
+    void updateMemberSynState(@Param("id") Long id, String fzId);
+
+    /**
+     * 根据线下会员id查询会员
+     *
+     * @param fzId
+     * @return
+     */
+    GdsMember findByFzId(@Param("fzId") String fzId);
+}

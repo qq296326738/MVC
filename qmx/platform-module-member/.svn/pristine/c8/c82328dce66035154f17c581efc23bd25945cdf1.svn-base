@@ -1,0 +1,90 @@
+package com.qmx.member.model;
+
+import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.qmx.base.api.base.BaseModel;
+
+/**
+ * 会员初始化设置
+ */
+@TableName("gds_initialization")
+public class GdsInitialization extends BaseModel {
+    /**
+     * 所属人id
+     */
+    @TableField("member_id")
+    private Long memberId;
+    /**
+     * 供应商id
+     */
+    @TableField("supplier_id")
+    private Long supplierId;
+    /**
+     * 客服电话
+     */
+    @TableField("mobile")
+    private String mobile;
+    /**
+     * 集团供应商id
+     */
+    @TableField("group_supplier_id")
+    private Long groupSupplierId;
+    /**
+     * 注册第一次赠送积分
+     */
+    @TableField("integral")
+    private Integer integral;
+    /**
+     * 初始化密码
+     */
+    @TableField("password")
+    private String password;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public Long getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public Long getGroupSupplierId() {
+        return groupSupplierId;
+    }
+
+    public void setGroupSupplierId(Long groupSupplierId) {
+        this.groupSupplierId = groupSupplierId;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}

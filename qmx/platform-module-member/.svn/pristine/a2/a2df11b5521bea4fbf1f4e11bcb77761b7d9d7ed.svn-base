@@ -1,0 +1,27 @@
+package com.qmx.member.mapper;
+
+import com.qmx.base.core.base.IBaseMapper;
+import com.qmx.member.model.GdsMemberActivityIntegral;
+import com.qmx.member.query.GdsMemberActivityIntegralVO;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface GdsMemberActivityIntegralMapper extends IBaseMapper<GdsMemberActivityIntegral> {
+    /**
+     * 查询时间是否有交集
+     *
+     * @param vo vo
+     * @return 不等于零则代表时间有重复的地方
+     */
+    int selectByTime(@Param("cm") GdsMemberActivityIntegralVO vo);
+
+    /**
+     * 注册多倍积分查询,有则更新,没有则新增
+     *
+     * @param id
+     * @param vo
+     * @return
+     */
+    GdsMemberActivityIntegral findRegisterByUserId(@Param("id") Long id,@Param("cm") GdsMemberActivityIntegralVO vo);
+}

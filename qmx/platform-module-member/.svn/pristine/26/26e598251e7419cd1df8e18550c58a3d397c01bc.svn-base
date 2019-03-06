@@ -1,0 +1,292 @@
+a,a:link,a:visited,a:active,a:hover{
+	text-decoration:none;
+}
+.wxsettled {
+    padding: 30px 40px 35px;
+}
+.wxsettled .btn {
+    border-radius: 2px;
+    padding: 8px 10px;
+}
+.wxsettled .btn-large {
+	cursor: pointer;
+    display:block;
+	background-color: #0077dd;
+    border-color: #006cc9;
+    color: #ffffff;
+	border-radius:2px;
+    font-size: 16px;
+    padding: 8px 25px;
+	border:none;
+}
+.wxsettled .btn-large:hover{
+	background-color:#0080ed;	
+}
+.wxsettled .input-append .important-text {
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+}
+.wxsettled .input-append .important-text + .btn {
+    padding: 4px 12px;
+}
+.wxsettled input[type="text"], .wxsettled input[type="number"], .wxsettled input[type="password"] {
+    border-radius: 2px;
+    padding: 8px 10px;
+}
+.wxsettled .control-group {
+    margin: 20px 0;
+}
+.wxsettled .control-group input{
+	background-color: #ffffff;
+    border: 1px solid #cccccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+.wxsettled .control-label {
+	float:left;
+	width:120px;
+	padding-top:5px;
+	text-align:right;
+    font-size: 12px;
+    line-height: 25px;
+}
+.wxsettled .form-horizontal fieldset {
+	border: 0 none;
+    margin: 0;
+    padding: 0;
+    margin-left: -45px;
+}
+.wxsettled .alert-pane {
+    background: none repeat scroll 0 0 #fff2dd;
+    border: 1px solid #fbe3be;
+    color: #cf8b1c;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.wxsettled .important-text .important-inverse {
+    background-color: #f60;
+    color: #fff;
+    padding: 1px 5px;
+}
+.wxsettled .wxsettled-main-title {
+    color: #4b0;
+    font-size: 16px;
+    height: 20px;
+    line-height: 20px;
+    margin: 15px 0;
+}
+.wxsettled .wxsettled-sub-title {
+    color: #666;
+    font-size: 12px;
+}
+.wxsettled .wxsettled-sub-desc {
+    color: #666;
+    font-size: 14px;
+}
+.wxsettled .wxsettled-prompt {
+    color: #666;
+    float: right;
+    font-size: 12px;
+    list-style: inside none disc;
+    margin-top: 15px;
+    padding: 5px 0 0 20px;
+    width: 265px;
+}
+.wxsettled .wxsettled-prompt li {
+    margin: 0 0 5px 5px;
+}
+.wxsettled .wxsettled-feature-line {
+    color: #333;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 30px 0 20px;
+}
+.wxsettled .wxsettled-feature-line .wxsettled-feature-line-addition {
+    float: right;
+    font-size: 12px;
+}
+.wxsettled table.wxsettled-feature-list {
+    border-radius: 0;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+.wxsettled table.wxsettled-feature-list td, .wxsettled table.wxsettled-feature-list th {
+    border-radius: 0 !important;
+    font-weight: normal;
+    height: 60px;
+    text-align: center;
+    vertical-align: middle;
+    width: 50px;
+}
+.wxsettled table.wxsettled-feature-list th {
+    background: none repeat scroll 0 0 #f8f8f8;
+}
+.wxsettled table.wxsettled-feature-list tr > td:first-child {
+    background: none repeat scroll 0 0 #f8f8f8;
+}
+.wxsettled table.wxsettled-feature-list .tick::before {
+    color: #4b0;
+    content: "√";
+    font-family: sans-serif;
+}
+.wxsettled .wxsettled-knowmore {
+    text-align: center;
+}
+.wxsettled .auth-wx-image {
+    background-size: cover;
+    height: 240px;
+    margin: 30px 0;
+    width: 576px;
+}
+.wxsettled .auth-wx-image.auth-wx-image-1 {
+    background-image: url("/v2/image/auth/auth_wx_1.png");
+}
+.wxsettled .auth-wx-image.auth-wx-image-2 {
+    background-image: url("/v2/image/auth/auth_wx_2.png");
+    margin-bottom: -30px;
+}
+.wxsettled .auth-wx-image.auth-wx-image-3 {
+    background-image: url("/v2/image/auth/auth_wx_3.png");
+}
+.wxsettled .auth-wx-image.wx-image-1 {
+    background-image: url("/v2/image/auth/wx_image_1_0723.png");
+    height: 123px;
+    width: 210px;
+}
+.wxsettled .auth-wx-image.wx-image-2 {
+    background-image: url("/v2/image/auth/wx_image_2_0723.png");
+    height: 106px;
+    width: 524px;
+}
+.wxsettled .auth-wx-image.wx-image-3 {
+    background-image: url("/v2/image/auth/wx_image_3_0723.png");
+    height: 96px;
+    width: 573px;
+}
+.wxsettled .auth-wx-image.wx-image-jiami {
+    background-image: url("/v2/image/auth/wx_image_jiami_1016.jpg");
+    height: 200px;
+    width: 573px;
+}
+.wxsettled .auth-wx-image.wx-image-4 {
+    background-image: url("/v2/image/auth/wx_image_4_0723.png");
+    height: 158px;
+    width: 480px;
+}
+.wxsettled .auth-wx-image.wx-image-5 {
+    background-image: url("/v2/image/auth/wx_image_5_0724.png");
+    height: 260px;
+    width: 660px;
+}
+.wxsettled .auth-wx-image.wx-image-6 {
+    background-image: url("/v2/image/auth/wx_image_6_0724.png");
+    height: 247px;
+    width: 640px;
+}
+.wxsettled ol.serial-list a[target="_blank"], .wxsettled ol.serial-list a[target="_blank"]:hover {
+    color: #07d;
+}
+.wxsettled ol.serial-list p {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+.wxsettled ol.serial-list p.retract {
+    margin-left: -50px;
+}
+.wxsettled ol.serial-list li {
+    border-top: 1px solid #e5e5e5;
+    margin: 0 20px 40px;
+    padding: 35px 0 0 80px;
+}
+.wxsettled ol.serial-list li:first-child {
+    border-top: medium none;
+    padding-top: 0;
+}
+.wxsettled ol.serial-list li:last-child {
+    margin-bottom: 0;
+}
+.wxsettled ol.serial-list span.serial {
+    background-color: #4b0;
+    border-radius: 2px;
+    color: #fff;
+    float: left;
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    margin-top: 7px;
+    text-align: center;
+    width: 20px;
+}
+.wxsettled ol.serial-list .serial-title {
+    line-height: 34px;
+    margin: 0 0 20px -80px;
+}
+.wxsettled ol.serial-list .serial-title-content {
+    margin-left: 30px;
+}
+.wxsettled ol.serial-list .control-label {
+    width: 100px;
+}
+.wxsettled .controls {
+    margin-left: 130px;
+	word-break:break-all;
+}
+.wxsettled ol.serial-list .help-block {
+    font-size: 12px;
+    line-height: 1.5em;
+}
+.wxsettled ol.serial-list .help-block.help-block-service {
+    line-height: 1.8em;
+    margin-top: 38px;
+}
+.wxsettled ol.serial-list .help-block.error-message {
+    margin-bottom: 0;
+}
+.wxsettled ol.serial-list .help-block.note p {
+    margin: 0;
+}
+.wxsettled ol.serial-list .help-block.note p:first-child {
+    margin-left: -2em;
+}
+.wxsettled ol.serial-list .help-block.note p:first-child::before {
+    content: "注：";
+}
+.wxsettled ol.serial-list .block {
+    margin-bottom: 20px;
+}
+.wxsettled .cert-setting-btn {
+	display:inline-block;
+    background-image: url(../../images/weixin_icon.png);
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    background-size: 39px 30px;
+    box-sizing: border-box;
+    color: #fff;
+    font-size: 14px;
+    height: 50px;
+    line-height: 32px;
+    padding:8px 25px 8px 60px;
+	background-color: #44bb00;
+    border-color: #3da900;
+	border-radius: 2px;
+}
+.wxsettled .cert-setting-btn:hover{
+	background-color:#49c800;	
+}
+@media not all, only screen and (min--moz-device-pixel-ratio: 1.5), not all, not all {
+.wxsettled .cert-setting-btn {
+    background-image: url("/v2/image/auth/weixin_icon@2x.png");
+}
+}
+.wxsettled .form-side-line {
+    position: relative;
+}
+.wxsettled .form-side-line::after {
+    /*border-left: 1px solid #e5e5e5;*/
+    bottom: 20px;
+    content: "";
+    position: absolute;
+    right: 285px;
+    top: 0;
+}

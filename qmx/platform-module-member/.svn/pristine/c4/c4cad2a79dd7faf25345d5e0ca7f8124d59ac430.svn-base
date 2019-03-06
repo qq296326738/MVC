@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsInviteMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsInvite">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="member_id" property="memberId"/>
+        <result column="openid" property="openid"/>
+        <result column="state" property="state"/>
+        <result column="code_integral" property="codeIntegral"/>
+        <result column="invite_type" property="InviteType"/>
+
+    </resultMap>
+
+    <sql id="Base_Condition">
+        <where>
+            <if test="cm.memberId != null">
+                and member_id = #{cm.memberId}
+            </if>
+            and enable_ = 1
+        </where>
+    </sql>
+
+    <select id="selectListEX" resultMap="BaseResultMap">
+        select * from gds_invite
+        <include refid="Base_Condition"/>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="findByOpenId" resultType="int">
+        SELECT COUNT(id) FROM gds_invite WHERE openid = #{openId} AND state = 1
+    </select>
+
+    <select id="findByUserIdAndOpenId" resultMap="BaseResultMap">
+        SELECT * FROM  gds_invite
+        WHERE
+            member_id = #{userId}
+        AND
+            openid = #{openId}
+        AND
+            invite_type = 'YAOQING'
+        limit 1
+    </select>
+
+</mapper>

@@ -1,0 +1,70 @@
+/*首页修改*/
+#main-content {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+.layui-body {
+	right: 0;
+}
+.layui-layout-admin .layui-body {
+	bottom: 0;
+}
+#main-content {
+	width: 100%;
+	height: 100%;
+	overflow-y: hidden;
+}
+#menu.layui-nav-child {
+	position: fixed;
+	top: 60px;
+	width: 100%;
+	background-color: #23262e;
+	border: none;
+}
+.layui-nav .layui-nav-child a {
+	color: rgba(255,255,255,.7);
+}
+.layui-nav.layui-layout-right .layui-nav-item dd > a {
+	color: #333;
+}
+#menu.layui-nav-child dd {
+	float: left;
+	text-align: center;
+}
+#menu dd a {
+	padding-top: 10px;
+}
+i[class^="admin-icon-"] {
+	display: block;
+	width: 80px;
+	height: 80px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.admin-icon-mp {
+	background: url(../images/admin-icon-mp.png) no-repeat scroll;
+}
+.admin-icon-kf {
+	background: url(../images/admin-icon-kf.png) no-repeat scroll;
+}
+.admin-icon-sp {
+	background: url(../images/admin-icon-sp.png) no-repeat scroll;
+}
+.admin-icon-tc {
+	background: url(../images/admin-icon-tc.png) no-repeat scroll;
+}
+.admin-icon-dkh {
+	background: url(../images/admin-icon-dkh.png) no-repeat scroll;
+}
+.admin-icon-lxs {
+	background: url(../images/admin-icon-lxs.png) no-repeat scroll;
+}
+.admin-icon-wx {
+	background: url(../images/admin-icon-wx.png) no-repeat scroll;
+}
+.admin-icon-hy {
+	background: url(../images/admin-icon-hy.png) no-repeat scroll;
+}

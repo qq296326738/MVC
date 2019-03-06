@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberActivityIntegralMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberActivityIntegral">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="supplier_id" property="supplierId"/>
+        <result column="level_id" property="levelId"/>
+        <result column="level_name" property="levelName"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="type" property="type"/>
+        <result column="multiple" property="multiple"/>
+
+    </resultMap>
+
+    <select id="selectIdPage" resultType="java.lang.Long">
+        select id from gds_activity_integral
+        <where>
+            <if test="cm.supplierId != null">
+                and supplier_id = #{cm.supplierId}
+            </if>
+            <if test="cm.levelId != null">
+                and level_id = #{cm.levelId}
+            </if>
+            <if test="cm.endTime != null">
+                and (end_time >= #{cm.endTime} AND start_time &lt;= #{cm.endTime} )
+            </if>
+            AND type = #{cm.type}
+            and enable_ = 1
+        </where>
+        ORDER BY start_time,level_id  ASC
+    </select>
+
+    <select id="selectByTime" resultType="int">
+        SELECT
+        COUNT(id)
+        FROM
+        gds_activity_integral
+        <where>
+            ( #{cm.startTime} >= start_time AND #{cm.startTime} &lt;= end_time
+            OR
+            #{cm.endTime} >= start_time AND #{cm.endTime} &lt;= end_time
+            OR
+            start_time >= #{cm.startTime} AND start_time &lt;= #{cm.endTime}
+            OR
+            end_time >= #{cm.startTime} AND end_time &lt;= #{cm.endTime}
+            )
+            AND type = #{cm.type}
+            <if test="cm.type.toString() != 'register' ">
+                AND level_id = #{cm.levelId}
+            </if>
+            AND enable_ = 1
+            <if test="cm.id  != null">
+                AND id &lt;&gt; #{cm.id}
+            </if>
+        </where>
+    </select>
+
+    <select id="findRegisterByUserId" resultMap="BaseResultMap">
+        SELECT
+          *
+        FROM
+          gds_activity_integral
+        <where>
+            ( #{cm.startTime} >= start_time AND #{cm.startTime} &lt;= end_time
+            OR
+            #{cm.endTime} >= start_time AND #{cm.endTime} &lt;= end_time
+            OR
+            start_time >= #{cm.startTime} AND start_time &lt;= #{cm.endTime}
+            OR
+            end_time >= #{cm.startTime} AND end_time &lt;= #{cm.endTime}
+            )
+            AND type = #{cm.type}
+            AND enable_ = 1
+            <if test="cm.id  != null">
+                AND id &lt;&gt; #{cm.id}
+            </if>
+        </where>
+        limit 1
+    </select>
+
+
+</mapper>

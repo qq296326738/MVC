@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.SysUserApiMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.qmx.member.model.SysUserApi">
+		<result column="name" property="name" />
+		<result column="api_plat" property="apiPlat" />
+		<result column="user_id" property="userId" />
+		<result column="member_id" property="memberId" />
+		<result column="order_source_id" property="orderSourceId" />
+		<result column="pay_method" property="payMethod" />
+		<result column="auto_pay" property="autoPay" />
+		<result column="auto_send_code" property="autoSendCode" />
+		<result column="shipping_status" property="shippingStatus" />
+		<result column="client_id" property="clientId" />
+		<result column="app_key" property="appKey" />
+		<result column="secret_key" property="secretKey" />
+		<result column="consume_notify_url" property="consumeNotifyUrl" />
+		<result column="refund_notify_url" property="refundNotifyUrl" />
+		<result column="send_code_notify_url" property="sendCodeNotifyUrl" />
+	</resultMap>
+
+
+	<select id="selectIdPage" resultType="java.lang.Long">
+		select id from sys_user_api
+		<where>
+			<if test="cm.name != null">
+				and name = #{cm.name}
+			</if>
+			<if test="cm.apiPlat != null">
+				and api_plat = #{cm.apiPlat}
+			</if>
+			<if test="cm.appType != null">
+				and app_type = #{cm.appType}
+			</if>
+			<if test="cm.userId != null">
+				and user_id = #{cm.userId}
+			</if>
+			<if test="cm.memberId != null">
+				and member_id = #{cm.memberId}
+			</if>
+			<if test="cm.orderSourceId != null">
+				and order_source_id = #{cm.orderSourceId}
+			</if>
+			<if test="cm.orderSourceName != null">
+				and order_source_name like CONCAT('%',#{cm.orderSourceName},'%')
+			</if>
+			<if test="cm.memberAccount != null">
+				and member_account like CONCAT('%',#{cm.memberAccount},'%')
+			</if>
+			<if test="cm.memberName != null">
+				and member_name like CONCAT('%',#{cm.memberName},'%')
+			</if>
+			<if test="cm.payMethod != null">
+				and pay_method = #{cm.payMethod}
+			</if>
+			<if test="cm.autoPay != null">
+				and auto_pay = #{cm.autoPay}
+			</if>
+			<if test="cm.autoSendCode != null">
+				and auto_send_code = #{cm.autoSendCode}
+			</if>
+			<if test="cm.shippingStatus != null">
+				and shipping_status = #{cm.shippingStatus}
+			</if>
+			<if test="cm.clientId != null">
+				and client_id = #{cm.clientId}
+			</if>
+			<if test="cm.appKey != null">
+				and app_key = #{cm.appKey}
+			</if>
+			<if test="cm.secretKey != null">
+				and secret_key = #{cm.secretKey}
+			</if>
+			<if test="cm.consumeNotifyUrl != null">
+				and consume_notify_url = #{cm.consumeNotifyUrl}
+			</if>
+			<if test="cm.refundNotifyUrl != null">
+				and refund_notify_url = #{cm.refundNotifyUrl}
+			</if>
+			<if test="cm.sendCodeNotifyUrl != null">
+				and send_code_notify_url = #{cm.sendCodeNotifyUrl}
+			</if>
+			<if test="cm.keyword != null and cm.keyword != ''">
+				and (
+		  			  or name like CONCAT('%',#{cm.keyword},'%')
+		  			  or api_plat like CONCAT('%',#{cm.keyword},'%')
+		  			  or user_id like CONCAT('%',#{cm.keyword},'%')
+		  			  or member_id like CONCAT('%',#{cm.keyword},'%')
+		  			  or order_source_id like CONCAT('%',#{cm.keyword},'%')
+		  			  or pay_method like CONCAT('%',#{cm.keyword},'%')
+		  			  or auto_pay like CONCAT('%',#{cm.keyword},'%')
+		  			  or auto_send_code like CONCAT('%',#{cm.keyword},'%')
+		  			  or shipping_status like CONCAT('%',#{cm.keyword},'%')
+		  			  or client_id like CONCAT('%',#{cm.keyword},'%')
+		  			  or app_key like CONCAT('%',#{cm.keyword},'%')
+		  			  or secret_key like CONCAT('%',#{cm.keyword},'%')
+		  			  or consume_notify_url like CONCAT('%',#{cm.keyword},'%')
+		  			  or refund_notify_url like CONCAT('%',#{cm.keyword},'%')
+		  			  or send_code_notify_url like CONCAT('%',#{cm.keyword},'%')
+		  				)
+			</if>
+		</where>
+	</select>
+</mapper>

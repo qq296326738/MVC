@@ -1,0 +1,133 @@
+@charset "utf-8";
+/*
+ * 
+ * Style - Common
+ * 
+ */
+ .button {
+	display: inline-block;
+	display: -moz-inline-stack;
+	padding: 0px 16px;
+	margin: 2px 2px 2px 0px;
+	cursor: pointer;
+	color: #fff;
+	outline: none;
+	blr: expression(this.hideFocus = true);
+	border: 1px solid #638eae;
+    -moz-border-radius: 2px;      /* Gecko browsers */
+    -webkit-border-radius: 2px;   /* Webkit browsers */
+    border-radius: 2px;            /* W3C syntax */
+	background: #638eae;
+	vertical-align: -1px;
+}
+
+.button:hover {
+	color: #222222;
+	background: #8db6d5;
+	border: 1px solid #8db6d5;
+	background-position: 0px -30px;
+}
+
+.button:disabled {
+	background: #ccc;
+	border: none;
+	cursor: auto;
+}
+
+.button:active {
+	background-position: 0px -60px;
+}
+
+a.button {
+	height: 22px;
+	line-height: 22px;
+	display: inline-block;
+	display: -moz-inline-stack;
+	padding: 0px 16px;
+	margin-right: 10px;
+	color: #fff;
+	outline: none;
+	blr: expression(this.hideFocus = true);
+}
+
+a.button:hover {
+	color: #222222;
+	background: #8db6d5;
+	border: 1px solid #8db6d5;
+	background-position: 0px -30px;
+}
+
+a.button:active {
+	background-position: 0px -60px;
+}
+
+a.button:disabled {
+	color: #bbbbbb;
+}
+
+a.button:disabled:hover, a.button:disabled:active {
+	color: #bbbbbb;
+	background-position: 0px 0px;
+}
+a.button .arrow {
+	width: 6px;
+	height: 3px;
+	position: absolute;
+	top: 12px;
+	right: 4px;
+	overflow: hidden;
+	background: url(../images/common.gif) 0px -180px no-repeat;
+}
+.report {
+	width: 98%;
+	color: black;
+	font-family: serif;
+	font-size: 10pt;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	letter-spacing: normal;
+	line-height: normal;
+	text-indent: 0;
+	text-transform: none;
+	white-space: normal;
+	word-spacing: normal;
+	margin: 0 1%;
+}
+
+.report .title {
+	padding: 10px 0;
+}
+
+.report table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.report th,.report td {
+	text-align: center;
+	border: thin solid rgb(193, 210, 227);
+	padding: 5px;
+}
+
+.report th {
+	background-color: rgb(218, 234, 251);
+}
+
+.report .title {
+	text-align: center;
+	font-size: 14pt;
+}
+
+.birtviewer_progressbar {
+	font-family: Verdana;
+	font-size: 8pt;
+	background: #FFFFFF;
+	border-width: 2px;
+	border-style: solid;
+	border-color: #FF912F;
+	cursor: default;
+}
+.bar2 {
+	padding: 5px 0px 5px 10px;
+}

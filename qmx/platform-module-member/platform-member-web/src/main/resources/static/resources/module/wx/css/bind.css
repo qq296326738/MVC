@@ -1,0 +1,80 @@
+/*绑定*/
+html, body {
+	width: 100%;
+	height: 100%;
+}
+html {
+	font-family: 'Microsoft YaHei';
+}
+.bind {
+	background: url(../images/bind_bg.jpg) no-repeat scroll;
+	background-position: center center;
+	background-size: auto 100%;
+	position: relative;
+}
+.bind-box {
+	text-align: center;
+	right: 12%;
+	top: 50%;
+	transform: translateY(-50%);
+	position: absolute;
+	border: solid 4px #b6e1f2;
+	border-radius: 20px;
+	background: rgba(255,255,255,.7);
+	padding-left: 40px;
+	padding-right: 40px;
+}
+.bind-box h2 {
+	font-family: FZZCH;
+	font-weight: 400;
+	font-size: 24px;
+	line-height: 2;
+	color: #ff0000;
+	margin-top: 8%;
+	margin-bottom: 8%;
+}
+.bind-step {
+	font-size: 16px;
+	padding: 5% 10%;
+	border: solid 1px #57bee5;
+	border-radius: 10px;
+	text-align: left;
+}
+.bind-btn {
+	background: #1e9fff;
+	color: #fff;
+	border: solid 1px #1e9fff;
+	border-radius: 6px;
+	width: 80%;
+	margin: 50px auto 25px auto;
+	padding: 10px;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 24px;
+	text-align: center;
+}
+
+/*绑定成功*/
+.bindSuccess {
+	background: url(../images/bindSuccess_bg.jpg);
+}
+.bindSuccess-box {
+	position: absolute;
+	top: 60%;
+	transform: translateY(-50%);
+	text-align: center;
+	width: 50%;
+	margin-left: 25%;
+}
+.bindSuccess-img, .bindSuccess-img > img {
+	width: 100%
+}
+.bindSuccess-box .bind-btn {
+	width: 50%;
+}
+
+@font-face {
+	font-family: FZZCH;
+	
+	src: url(../fonts/sfont.ttf), url(../fonts/sfont.eot), url(../fonts/sfont.woff), url(../fonts/sfont.woff2);
+}

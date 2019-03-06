@@ -1,0 +1,47 @@
+package com.qmx.member.web;
+
+import com.qmx.coreservice.model.SysUser;
+import com.qmx.member.enumerate.IntegralType;
+import com.qmx.member.query.GdsMemberActivityIntegralVO;
+import com.qmx.member.service.GdsMemberActivityIntegralService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class PlatformMemberWebApplicationTests {
+
+    @Autowired
+    private GdsMemberActivityIntegralService service;
+
+    @Test
+    public void contextLoads() throws ParseException {
+        SysUser user = new SysUser();
+        user.setId(980689529120899073L);
+        GdsMemberActivityIntegralVO vo = new GdsMemberActivityIntegralVO();
+        vo.setType(IntegralType.consumption);
+        vo.setLevelName("CCCCC");
+        vo.setLevelId(1078858775407562753L);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        vo.setStartTime(format.parse("2018-12-28"));
+        vo.setEndTime(format.parse("2018-12-29"));
+        vo.setMultiple(1);
+        List<String> list = new ArrayList<>();
+        list.add("993299459963056130&青城山(指定游玩)&menpiao");
+        list.add("993741009046085633&火龙果&shangpin");
+        vo.setIds(list);
+        service.createDto(user, vo);
+    }
+
+}

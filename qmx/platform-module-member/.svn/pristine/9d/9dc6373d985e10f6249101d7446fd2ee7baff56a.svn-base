@@ -1,0 +1,87 @@
+package com.qmx.member.query;
+
+import com.qmx.base.api.dto.QueryDto;
+
+public class GdsInitializationVO extends QueryDto {
+    private Long id;
+    /**
+     * 所属人id
+     */
+    private Long memberId;
+    /**
+     * 供应商id
+     */
+    private Long supplierId;
+    /**
+     * 集团供应商id
+     */
+    private Long groupSupplierId;
+    /**
+     * 客服电话
+     */
+    private String mobile;
+    /**
+     * 注册第一次积分
+     */
+    private Integer integral;
+    /**
+     * 初始化密码
+     */
+    private String password;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public Long getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public Long getGroupSupplierId() {
+        return groupSupplierId;
+    }
+
+    public void setGroupSupplierId(Long groupSupplierId) {
+        this.groupSupplierId = groupSupplierId;
+    }
+
+    public Integer getIntegral() {
+        return integral;
+    }
+
+    public void setIntegral(Integer integral) {
+        this.integral = integral;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+}

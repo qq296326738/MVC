@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qmx.member.mapper.GdsMemberExchangeOrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.qmx.member.model.GdsMemberExchangeOrder">
+        <result column="id" property="id"/>
+        <result column="enable_" property="enable"/>
+        <result column="remark" property="remark"/>
+        <result column="create_by" property="createBy"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_by" property="updateBy"/>
+        <result column="update_time" property="updateTime"/>
+
+        <result column="supplier_id" property="supplierId"/>
+        <result column="group_supplier_id" property="groupSupplierId"/>
+        <result column="member_id" property="memberId"/>
+        <result column="exchange_id" property="exchangeId"/>
+        <result column="product_name" property="productName"/>
+        <result column="count" property="count"/>
+        <result column="integral" property="integral"/>
+        <result column="name" property="name"/>
+        <result column="mobile" property="mobile"/>
+        <result column="area" property="area"/>
+        <result column="address" property="address"/>
+        <result column="deliver_type" property="deliverType"/>
+        <result column="redeem_code" property="redeemCode"/>
+        <result column="state_type" property="stateType"/>
+        <result column="state" property="state"/>
+        <result column="sn" property="sn"/>
+        <result column="sn_text" property="snText"/>
+        <result column="time" property="time"/>
+        <result column="money" property="money"/>
+
+    </resultMap>
+
+    <select id="selectIdPage" resultType="java.lang.Long">
+        select id from gds_member_exchange_order
+        <where>
+            <if test="cm.memberId != null">
+                and member_id = #{cm.memberId}
+            </if>
+            <if test="cm.supplierId != null">
+                and supplier_id = #{cm.supplierId}
+            </if>
+            <if test="cm.mobile != null and cm.mobile != ''">
+                and mobile = #{cm.mobile}
+            </if>
+            <if test="cm.sn != null and cm.sn != ''">
+                and sn = #{cm.sn}
+            </if>
+            <if test="cm.redeemCode != null and cm.redeemCode != ''">
+                and redeem_code = #{cm.redeemCode}
+            </if>
+            <if test="cm.stateType != null">
+                and state_type = #{cm.stateType}
+            </if>
+            and enable_ = 1
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <update id="updateStateType">
+        UPDATE gds_member_exchange_order
+        <set>
+            <if test="dto.stateType.name == 'YTZFH'">
+                state_type = 'YFH',
+            </if>
+            <if test="dto.stateType.name == 'YFDHM'">
+                state_type = 'YLQ',
+            </if>
+            <if test="dto.stateType.name == 'YFH'">
+                state_type = 'YLQ'
+            </if>
+        </set>
+        WHERE id = #{dto.id}
+    </update>
+
+    <select id="listByMemberId" resultMap="BaseResultMap">
+        SELECT * FROM gds_member_exchange_order
+        WHERE member_id = #{id}
+        ORDER BY time DESC
+    </select>
+
+</mapper>

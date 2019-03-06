@@ -1,0 +1,169 @@
+package com.qmx.member.service;
+
+import com.baomidou.mybatisplus.plugins.Page;
+import com.qmx.base.api.annotation.GdsCacheConfig;
+import com.qmx.base.api.dto.PageDto;
+import com.qmx.base.api.dto.RestResponse;
+import com.qmx.base.api.enumerate.SysUserType;
+import com.qmx.base.api.exception.BusinessException;
+import com.qmx.base.core.base.BaseService;
+import com.qmx.base.core.utils.InstanceUtil;
+import com.qmx.coreservice.model.SysUser;
+import com.qmx.member.common.GdsMemberRegisterService;
+import com.qmx.member.enumerate.DeliverType;
+import com.qmx.member.enumerate.StateType;
+import com.qmx.member.mapper.GdsMemberExchangeOrderMapper;
+import com.qmx.member.model.GdsMember;
+import com.qmx.member.model.GdsMemberExchange;
+import com.qmx.member.model.GdsMemberExchangeOrder;
+import com.qmx.member.query.GdsMemberExchangeOrderVO;
+import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.util.Assert;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+/**
+ * 兑换记录
+ */
+@Service
+@GdsCacheConfig(cacheNS = "GDS-MEMBER", cacheName = "GdsMemberExchangeOrder")
+public class GdsMemberExchangeOrderService extends BaseService<GdsMemberExchangeOrder> {
+
+    @Autowired
+    private GdsMemberExchangeOrderMapper gdsMemberExchangeOrderMapper;
+    @Autowired
+    private GdsMemberService gdsMemberService;
+    @Autowired
+    private GdsMemberExchangeService gdsMemberExchangeService;
+    @Autowired
+    private GdsMemberIntegeralService gdsMemberIntegeralService;
+    @Autowired
+    private GdsMemberRegisterService gdsMemberRegisterService;
+
+    public PageDto<GdsMemberExchangeOrder> findList(SysUser currentUser, GdsMemberExchangeOrderVO vo) {
+        try {
+            Map<String, Object> params = InstanceUtil.transBean2StringMap(vo);
+            if (currentUser.getUserType() == SysUserType.admin) {
+            } else if (currentUser.getUserType() == SysUserType.supplier) {
+                params.put("supplierId", currentUser.getId());
+            } else {
+                return new PageDto<>();
+            }
+            Page<GdsMemberExchangeOrder> page = this.query(params);
+            PageDto<GdsMemberExchangeOrder> pageDto = new PageDto<>(page.getTotal(), page.getSize(), page.getCurrent(), page.getRecords());
+            return pageDto;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new PageDto<>();
+        }
+    }
+
+    /**
+     * 更新订单发货状态
+     *
+     * @param vo
+     * @return
+     */
+    @Transactional(rollbackFor = Throwable.class)
+    public RestResponse updateStateType(GdsMemberExchangeOrderVO vo) {
+
+        try {
+            Assert.notNull(vo.getId(), "订单获取失败");
+            gdsMemberExchangeOrderMapper.updateStateType(vo);
+            return RestResponse.ok();
+        } catch (Exception e) {
+            e.printStackTrace();
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return RestResponse.fail("提交失败");
+        }
+    }
+
+    /**
+     * 获得会员每月兑换记录
+     */
+    public Map<String, List<GdsMemberExchangeOrder>> getMemberMoneyList(Long id) {
+        //查询该用户所有充值记录
+        List<GdsMemberExchangeOrder> list = gdsMemberExchangeOrderMapper.listByMemberId(id);
+        Iterator<GdsMemberExchangeOrder> iterator = list.iterator();
+        HashMap<String, List<GdsMemberExchangeOrder>> hashMap = new LinkedHashMap<>();
+        SimpleDateFormat timeYM = new SimpleDateFormat("yyyy年MM月");
+        while (iterator.hasNext()) {
+            GdsMemberExchangeOrder gdsMemberExchangeOrder = iterator.next();
+            String time = timeYM.format(gdsMemberExchangeOrder.getTime());
+            if (!hashMap.containsKey(time)) {
+                hashMap.put(time, new ArrayList<GdsMemberExchangeOrder>());
+            }
+            hashMap.get(time).add(gdsMemberExchangeOrder);
+        }
+        return hashMap;
+    }
+
+    /**
+     * 创建兑换订单
+     *
+     * @param vo
+     * @return
+     */
+    @Transactional(rollbackFor = Throwable.class)
+    public RestResponse<GdsMemberExchangeOrder> createExchange(GdsMemberExchangeOrderVO vo) {
+        try {
+            GdsMember gdsMember = gdsMemberService.find(vo.getMemberId());
+            GdsMemberExchange gdsMemberExchange = gdsMemberExchangeService.find(vo.getExchangeId());
+            //商品所需积分
+            Integer integeral = gdsMemberExchange.getIntegeral();
+            //购买数量
+            Integer count = vo.getCount();
+            //会员所剩积分
+            Integer integral = gdsMember.getIntegral();
+            //购买所需积分
+            Integer voIntegral = vo.getIntegral();
+            if (integeral * count != voIntegral) {
+                return RestResponse.fail("数据异常,请重试");
+            }
+            if (integral < voIntegral) {
+                return RestResponse.fail("积分余额不足");
+            }
+            //,,添加兑换记录表
+            GdsMemberExchangeOrder order = new GdsMemberExchangeOrder();
+            BeanUtils.copyProperties(vo, order);
+            order.setProductName(gdsMemberExchange.getProductName());
+            String sn = RandomStringUtils.randomNumeric(20);
+            order.setSn(sn);
+            order.setDeliverType(gdsMemberExchange.getDeliverType());
+            if (gdsMemberExchange.getDeliverType() == DeliverType.DUIHUAN) {
+                order.setRedeemCode(RandomStringUtils.randomAlphanumeric(6));
+                order.setStateType(StateType.YFDHM);
+            } else if (gdsMemberExchange.getDeliverType() == DeliverType.YOUJI) {
+                order.setStateType(StateType.YTZFH);
+            }
+            order.setState(true);
+            order.setTime(new Date());
+            order.setSupplierId(gdsMember.getSupplierId());
+            GdsMemberExchangeOrder data = this.save(order);
+            //添加积分记录表,(修改会员积分)
+            gdsMemberIntegeralService.createOrder(data, gdsMember.getFzId());
+            try {
+                // TODO: 2018/10/10  发送邮寄短信,以后修改,暂时用的微商城的短信模板
+                if (data.getDeliverType() == DeliverType.DUIHUAN) {
+                    gdsMemberRegisterService.sendExchange(data);
+                } else {
+                    gdsMemberRegisterService.sendDeliver(data);
+                }
+            } catch (Exception e) {
+                throw new BusinessException("兑换失败,发送短信失败");
+            }
+            return RestResponse.ok(data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //回滚事务
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return RestResponse.fail("兑换失败");
+        }
+    }
+}

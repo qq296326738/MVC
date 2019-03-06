@@ -1,0 +1,148 @@
+package com.qmx.member.web.config;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.qmx.base.core.interceptor.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import java.util.List;
+import com.qmx.member.web.interceptor.SysOpenInterceptor;
+
+/**
+ * @Author liubin
+ * @Description
+ * @Date Created on 2017/12/11 11:04.
+ * @Modified By
+ */
+@EnableWebMvc
+@Configuration
+public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        //统一静态资源目录
+        registry.addResourceHandler("/resources/**")
+                .addResourceLocations("classpath:/static/resources/");
+        /*registry.addResourceHandler("*//**").addResourceLocations("classpath:/static/");*/
+    }
+
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        ObjectMapper objectMapper = new ObjectMapper();
+        /**
+         * 序列换成json时,将所有的long变成string
+         * 因为js中得数字类型不能包含所有的java long值
+         */
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+        simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+        objectMapper.registerModule(simpleModule);
+        jackson2HttpMessageConverter.setObjectMapper(objectMapper);
+        converters.add(jackson2HttpMessageConverter);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+
+        /**
+         * 系统Token拦截器
+         */
+        registry.addInterceptor(tokenInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/open/**")
+                .excludePathPatterns("/api/**")
+                .excludePathPatterns("/error")
+                .excludePathPatterns("/payNotify/**")
+                .excludePathPatterns("/resources/**");
+
+        /**
+         * 系统open拦截器
+         */
+        registry.addInterceptor(openInterceptor()).addPathPatterns("/open/**");
+
+        /**
+         * 恶意请求拦截器
+         */
+        registry.addInterceptor(maliciousRequestInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/resources/**");
+
+        /**
+         * 系统api拦截器
+         */
+        registry.addInterceptor(sysApiInterceptor()).addPathPatterns("/api/**");
+
+        /**
+         * 系统访问日志拦截器
+         */
+        registry.addInterceptor(eventInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/resources/**");
+
+        //列表参数保留
+        registry.addInterceptor(listInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/resources/**");
+        //super.addInterceptors(registry);//2.0
+    }
+
+    /**
+     * 系统Token拦截器
+     * @return
+     */
+    @Bean
+    TokenInterceptor tokenInterceptor(){
+        return new TokenInterceptor();
+    }
+
+    /**
+     * 系统open拦截器
+     * @return
+     */
+    @Bean
+    SysOpenInterceptor openInterceptor(){
+//        return new SysOpenInterceptor();
+        return new SysOpenInterceptor();
+    }
+
+    /**
+     * 恶意请求拦截器
+     * @return
+     */
+    @Bean
+    MaliciousRequestInterceptor maliciousRequestInterceptor(){
+        MaliciousRequestInterceptor maliciousRequestInterceptor=  new MaliciousRequestInterceptor();
+        maliciousRequestInterceptor.setMaxMaliciousTimes(16);
+        maliciousRequestInterceptor.setMinRequestIntervalTime(500L);
+        return maliciousRequestInterceptor;
+    }
+
+    /**
+     * 系统api拦截器
+     * @return
+     */
+    @Bean
+    SysApiInterceptor sysApiInterceptor(){
+        return new SysApiInterceptor();
+    }
+
+    /**
+     * 日志拦截器
+     * @return
+     */
+    @Bean
+    EventInterceptor eventInterceptor(){
+        return new EventInterceptor();
+    }
+
+    @Bean
+    ListInterceptor listInterceptor(){
+        return new ListInterceptor();
+    }
+}
